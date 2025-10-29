@@ -8,7 +8,7 @@ There is already a proof of concept python script that can decrypt and encrypt s
 You can edit the save file in a text editor after decryption.
 
 Save File Location:
-- Linux: `~/.local/share/Terrible Toybox/Death by Scrolling/save
+- Linux: `~/.local/share/Terrible Toybox/Death by Scrolling/save`
 - Windows: `C:\Users\<YourUsername>\AppData\Local\Terrible Toybox\Death by Scrolling\save.bin` (unverified location)
 - MacOS: `~/Library/Application Support/Terrible Toybox/Death by Scrolling/save.bin` (unverified location)
 
