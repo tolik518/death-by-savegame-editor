@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
-import sys, os, struct, argparse, secrets
+import sys, os, struct, argparse
+# 1. python3 dbs_codec.py decrypt ../saves/13337gems payload.hocon
+# 2. ???
+# 3. python3 dbs_codec.py encrypt payload.hocon ../save.bin
 
-# python3 dbs_codec.py decrypt ../dbs_plain/key_btea.bin ../saves/13337gems payload.txt
-# python3 dbs_codec.py encrypt ../dbs_plain/key_btea.bin payload.txt ../saves/13336gems --extra4 0x0169027d
+# 16-Byte XXTEA/BTEA Key (little endian, gedumpt)
+KEY = bytes.fromhex(
+    "93 9d ab 7a 2a 56 f8 af b4 db a9 b5 22 a3 4b 2b".replace(" ", "")
 
-# ---------- XXTEA (BTEA) ----------
+# extra4-Feld im Footer
+EXTRA4 = 0x0169027d
+
+# XXTEA / BTEA (mit ghidra gedumped)
 DELTA = 0x9E3779B9
-
 def _u32(x): return x & 0xFFFFFFFF
 
 def xxtea_encrypt_block(v, k):
@@ -19,13 +25,13 @@ def xxtea_encrypt_block(v, k):
         e = (sumv >> 2) & 3
         for p in range(n-1):
             y = v[p+1]
-            mx = ((_u32((z>>5) ^ (y<<2)) + _u32((y>>3) ^ (z<<4))) ^ _u32((sumv ^ y) + (k[(p & 3) ^ e] ^ z)))
-            v[p] = _u32(v[p] + mx)
-            z = v[p]
+            mx = ((_u32((z>>5) ^ (y<<2)) + _u32((y>>3) ^ (z<<4)))
+                  ^ _u32((sumv ^ y) + (k[(p & 3) ^ e] ^ z)))
+            v[p] = _u32(v[p] + mx); z = v[p]
         y = v[0]
-        mx = ((_u32((z>>5) ^ (y<<2)) + _u32((y>>3) ^ (z<<4))) ^ _u32((sumv ^ y) + (k[((n-1) & 3) ^ e] ^ z)))
-        v[-1] = _u32(v[-1] + mx)
-        z = v[-1]
+        mx = ((_u32((z>>5) ^ (y<<2)) + _u32((y>>3) ^ (z<<4)))
+              ^ _u32((sumv ^ y) + (k[((n-1) & 3) ^ e] ^ z)))
+        v[-1] = _u32(v[-1] + mx); z = v[-1]
     return v
 
 def xxtea_decrypt_block(v, k):
@@ -38,23 +44,21 @@ def xxtea_decrypt_block(v, k):
         e = (sumv >> 2) & 3
         for p in range(n-1, 0, -1):
             z = v[p-1]
-            mx = ((_u32((z>>5) ^ (y<<2)) + _u32((y>>3) ^ (z<<4))) ^ _u32((sumv ^ y) + (k[(p & 3) ^ e] ^ z)))
-            v[p] = _u32(v[p] - mx)
-            y = v[p]
+            mx = ((_u32((z>>5) ^ (y<<2)) + _u32((y>>3) ^ (z<<4)))
+                  ^ _u32((sumv ^ y) + (k[(p & 3) ^ e] ^ z)))
+            v[p] = _u32(v[p] - mx); y = v[p]
         z = v[-1]
-        mx = ((_u32((z>>5) ^ (y<<2)) + _u32((y>>3) ^ (z<<4))) ^ _u32((sumv ^ y) + (k[(0 & 3) ^ e] ^ z)))
-        v[0] = _u32(v[0] - mx)
-        y = v[0]
-        sumv = _u32(sumv - DELTA)
-        rounds -= 1
+        mx = ((_u32((z>>5) ^ (y<<2)) + _u32((y>>3) ^ (z<<4)))
+              ^ _u32((sumv ^ y) + (k[(0 & 3) ^ e] ^ z)))
+        v[0] = _u32(v[0] - mx); y = v[0]
+        sumv = _u32(sumv - DELTA); rounds -= 1
     return v
 
 def xxtea_encrypt_bytes(b, key16_le):
-    # pad to 4-byte words (XXTEA arbeitet auf 32-bit Wörtern, n>=2)
     pad = (-len(b)) & 3
     bb = b + b'\x00'*pad
     v = list(struct.unpack("<%dI" % (len(bb)//4), bb))
-    if len(v) == 1: v.append(0)  # n>=2
+    if len(v) == 1: v.append(0)
     k = list(struct.unpack("<4I", key16_le))
     vv = xxtea_encrypt_block(v, k)
     return struct.pack("<%dI" % len(vv), *vv)[:len(bb)]
@@ -66,140 +70,87 @@ def xxtea_decrypt_bytes(b, key16_le):
     if len(v) == 1: v.append(0)
     k = list(struct.unpack("<4I", key16_le))
     vv = xxtea_decrypt_block(v, k)
-    out = struct.pack("<%dI" % len(vv), *vv)
-    return out[:len(b)]
+    return struct.pack("<%dI" % len(vv), *vv)[:len(b)]
 
-# ---------- Trailer helpers ----------
+# Footer + Checksum
+# Layout: [payload | checksum(4 LE) | extra4(4 LE) | pad(0..8) | padlen(1)]
 def calc_checksum(payload: bytes) -> int:
+    # Engine: 0x06583463 + Summe aller Payload-Bytes (mod 2^32)
     return (0x06583463 + sum(payload)) & 0xFFFFFFFF
 
-def pack_block(payload: bytes, extra4: int = 0, padlen: int = None) -> bytes:
-    if padlen is None:
-        padlen = secrets.randbelow(9)  # 0..8
-    assert 0 <= padlen <= 8
+def pack_block(payload: bytes, extra4: int = EXTRA4, pad_bytes: bytes | None = None) -> bytes:
+    """
+    baut den Klartext-Block so, dass seine Länge % 8 == 0 bleibt (Engine-Requirement).
+    Wenn pad_bytes None ist, generieren wir deterministische Null-Bytes (kein RNG nötig).
+    """
+    base = len(payload) + 9  # 4(checksum) + 4(extra4) + 1(padlen)
+    # kleinste padlen (0..7), die total_len % 8 == 0 macht
+    padlen = (-base) & 7
     checksum = calc_checksum(payload)
-    footer = struct.pack("<I", checksum) + struct.pack("<I", extra4)
-    pad = secrets.token_bytes(padlen) if padlen else b""
-    return payload + footer + pad + bytes([padlen])
+    footer = struct.pack("<II", checksum, extra4)
+    if padlen:
+        if pad_bytes is None:
+            pad = b"\x00" * padlen
+        else:
+            if len(pad_bytes) < padlen:
+                raise ValueError("pad_bytes zu kurz")
+            pad = pad_bytes[:padlen]
+    else:
+        pad = b""
+    block = payload + footer + pad + bytes([padlen])
+    # Sanity: Engine verlangt multiples of 8
+    assert len(block) % 8 == 0, "plain block must be multiple of 8"
+    return block
 
 def unpack_block(plain: bytes):
+    if len(plain) < 9:
+        raise ValueError("Block zu kurz")
     padlen = plain[-1]
     if not (0 <= padlen <= 8):
         raise ValueError(f"padlen out of range: {padlen}")
     payload_len = len(plain) - padlen - 9
+    if payload_len < 0:
+        raise ValueError("payload_len < 0 (korrupt?)")
     payload = plain[:payload_len]
     checksum, extra4 = struct.unpack_from("<II", plain, payload_len)
     return payload, checksum, extra4, padlen
 
-# ---------- CLI ----------
-def cmd_decrypt_cipher(args):
-    key = open(args.key, "rb").read()
+# CLI (decrypt/encrypt)
+def cmd_decrypt(args):
     enc = open(args.cipher, "rb").read()
-    plain = xxtea_decrypt_bytes(enc, key)
+    if (len(enc) & 7) != 0:
+        print(f"[warn] cipher len {len(enc)} ist kein Vielfaches von 8 – Engine würde das ablehnen.")
+    plain = xxtea_decrypt_bytes(enc, KEY)
     payload, csum, extra4, padlen = unpack_block(plain)
     calc = calc_checksum(payload)
-    print(f"[info] len(enc)={len(enc)} padlen={padlen} extra4=0x{extra4:08x}")
-    print(f"[info] checksum stored=0x{csum:08x} calc=0x{calc:08x} -> {'OK' if csum==calc else 'MISMATCH'}")
+    print(f"[info] len(enc)={len(enc)}  padlen={padlen}  extra4=0x{extra4:08x}")
+    print(f"[info] checksum stored=0x{csum:08x}  calc=0x{calc:08x}  -> {'OK' if csum==calc else 'MISMATCH'}")
     open(args.out_plain, "wb").write(payload)
-    print(f"[ok] wrote payload plaintext -> {args.out_plain}")
+    print(f"[ok] wrote payload -> {args.out_plain}")
 
-def cmd_encrypt_plain(args):
-    key = open(args.key, "rb").read()
+def cmd_encrypt(args):
     payload = open(args.plain, "rb").read()
-
-    extra4 = 0
-    padlen = args.padlen  # kann None sein
-
-    if args.extra4 is not None:
-        extra4 = parse_u32(args.extra4)
-        print(f"[info] using extra4 from CLI: 0x{extra4:08x}")
-    elif args.ref_block:
-        blk = open(args.ref_block, "rb").read()
-        _payload_ref, _csum_ref, extra4, padlen_ref = unpack_block(blk)
-        print(f"[info] reusing extra4 from ref-block: 0x{extra4:08x}")
-        # padlen nur übernehmen, wenn der Nutzer keinen expliziten padlen gesetzt hat
-        if padlen is None:
-            padlen = padlen_ref
-            print(f"[info] reusing padlen from ref-block: {padlen}")
-    else:
-        print("[warn] no extra4 provided; defaulting to 0 (game may reject)")
-
-    # Optional: Cipher-Länge an Referenz angleichen
-    target_cipher_len = None
-    if args.ref_cipher is not None:
-        target_cipher_len = os.path.getsize(args.ref_cipher)
-        print(f"[info] will try to match cipher size to ref: {target_cipher_len} bytes")
-
-    # 1) Block packen (payload + checksum + extra4 + pad + padlen)
-    block = pack_block(payload, extra4=extra4, padlen=padlen)
-
-    # 2) Falls target_cipher_len gesetzt ist, padlen so anpassen, dass
-    #    len( encrypt(block) ) == target_cipher_len
-    if target_cipher_len is not None:
-        # Brute-force padlen 0..8 durchprobieren (max 9 Varianten)
-        for try_pad in range(0, 9):
-            blk_try = pack_block(payload, extra4=extra4, padlen=try_pad)
-            enc_try = xxtea_encrypt_bytes(blk_try, key)
-            if len(enc_try) == target_cipher_len:
-                block = blk_try
-                padlen = try_pad
-                print(f"[info] matched target size with padlen={padlen}")
-                break
-        else:
-            print("[warn] could not match target cipher size; proceeding anyway")
-
-    # 3) Encrypt
-    enc = xxtea_encrypt_bytes(block, key)
-    open(args.out_cipher, "wb").write(enc)
-    print(f"[ok] wrote encrypted block -> {args.out_cipher}")
-
-
-def parse_u32(s: str) -> int:
-    s = s.strip().lower()
-    if s.startswith("0x"):
-        return int(s, 16) & 0xFFFFFFFF
-    return int(s) & 0xFFFFFFFF
-
-def cmd_encrypt_plain(args):
-    key = open(args.key, "rb").read()
-    payload = open(args.plain, "rb").read()
-
-    # 1) extra4-Quelle priorisieren: --extra4 > --ref-block > default 0
-    extra4 = 0
-    if args.extra4 is not None:
-        extra4 = parse_u32(args.extra4)
-        print(f"[info] using extra4 from CLI: 0x{extra4:08x}")
-    elif args.ref_block:
-        blk = open(args.ref_block, "rb").read()
-        _, _, extra4, _ = unpack_block(blk)
-        print(f"[info] reusing extra4 from ref-block: 0x{extra4:08x}")
-    else:
-        print("[warn] no extra4 provided; defaulting to 0 (game may reject)")
-
-    block = pack_block(payload, extra4=extra4, padlen=args.padlen)
-    enc = xxtea_encrypt_bytes(block, key)
+    # Baue Plain-Block so, dass (len % 8 == 0), checksum passt, und EXTRA4 drin ist
+    block = pack_block(payload, extra4=EXTRA4)
+    enc = xxtea_encrypt_bytes(block, KEY)
+    # Sanity
+    assert (len(enc) & 7) == 0, "cipher must be multiple of 8"
     open(args.out_cipher, "wb").write(enc)
     print(f"[ok] wrote encrypted block -> {args.out_cipher}")
 
 def main():
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(description="Death by Scrolling save (de|en)crypt – minimal, hardcoded")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
-    d = sub.add_parser("decrypt", help="cipher -> payload")
-    d.add_argument("key")
+    d = sub.add_parser("decrypt", help="cipher -> plaintext payload")
     d.add_argument("cipher")
     d.add_argument("out_plain")
-    d.set_defaults(func=cmd_decrypt_cipher)
+    d.set_defaults(func=cmd_decrypt)
 
-    e = sub.add_parser("encrypt", help="payload -> cipher")
-    e.add_argument("key")
+    e = sub.add_parser("encrypt", help="plaintext payload -> cipher")
     e.add_argument("plain")
     e.add_argument("out_cipher")
-    e.add_argument("--ref-block", help="optional plain_btea.bin to reuse extra4", default=None)
-    e.add_argument("--ref-cipher", help="optional reference encrypted file to match size", default=None)
-    e.add_argument("--extra4", help="override extra4 (e.g. 0x1234abcd or 305419896)", default=None)
-    e.add_argument("--padlen", type=int, default=None)
-    e.set_defaults(func=cmd_encrypt_plain)
+    e.set_defaults(func=cmd_encrypt)
 
     args = ap.parse_args()
     args.func(args)
