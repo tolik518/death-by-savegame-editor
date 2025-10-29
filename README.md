@@ -12,10 +12,12 @@ Save File Location:
 - Windows: `C:\Users\<YourUsername>\AppData\Local\Terrible Toybox\Death by Scrolling\save.bin` (unverified location)
 - MacOS: `~/Library/Application Support/Terrible Toybox/Death by Scrolling/save.bin` (unverified location)
 
-1. cd scripts
-2. run `python3 dbs_codec.py decrypt "/home/tolik/.local/share/Terrible Toybox/Death by Scrolling/save.bin" payload.hocon`
-3. Change some data in the `payload.hocon` file
-4. run `python3 dbs_codec.py encrypt payload.hocon "/home/tolik/.local/share/Terrible Toybox/Death by Scrolling/save.bin"`
+Linux: 
+1. Clone/Download this repository
+2. Go to the `scripts` folder and open your Terminal
+3. run `python3 dbs_codec.py decrypt "/home/tolik/.local/share/Terrible Toybox/Death by Scrolling/save.bin" payload.hocon`
+4. Change some data in the `payload.hocon` file
+5. run `python3 dbs_codec.py encrypt payload.hocon "/home/tolik/.local/share/Terrible Toybox/Death by Scrolling/save.bin"`
 
 (!) YOU CAN LOSE ALL YOUR PROGRESS IF YOU MAKE A MISTAKE (!)
 (!) YOU CAN GET BANNED FROM THE LEADERBOARD FOR USING MODIFIED SAVE FILES (!)
