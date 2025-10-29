@@ -3,7 +3,23 @@
 Savegame editor for the game "Death by Daylight". 
 It allows players to fully modify their save files.  
 
-## Status: WIP
+# Status: WIP
+There is already a proof of concept python script that can decrypt and encrypt save files.
+You can edit the save file in a text editor after decryption.
+
+Save File Location:
+- Linux: `~/.local/share/Terrible Toybox/Death by Scrolling/save
+- Windows: `C:\Users\<YourUsername>\AppData\Local\Terrible Toybox\Death by Scrolling\save.bin` (unverified location)
+- MacOS: `~/Library/Application Support/Terrible Toybox/Death by Scrolling/save.bin` (unverified location)
+
+1. cd scripts
+2. run `python3 dbs_codec.py decrypt "/home/tolik/.local/share/Terrible Toybox/Death by Scrolling/save.bin" payload.hocon`
+3. Change some data in the `payload.hocon` file
+4. run `python3 dbs_codec.py encrypt payload.hocon "/home/tolik/.local/share/Terrible Toybox/Death by Scrolling/save.bin"`
+
+(!) YOU CAN LOSE ALL YOUR PROGRESS IF YOU MAKE A MISTAKE (!)
+(!) YOU CAN GET BANNED FROM THE LEADERBOARD FOR USING MODIFIED SAVE FILES (!)
+
 
 
 
