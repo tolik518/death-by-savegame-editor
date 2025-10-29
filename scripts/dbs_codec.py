@@ -7,6 +7,7 @@ import sys, os, struct, argparse
 # 16-Byte XXTEA/BTEA Key (little endian, gedumpt)
 KEY = bytes.fromhex(
     "93 9d ab 7a 2a 56 f8 af b4 db a9 b5 22 a3 4b 2b".replace(" ", "")
+    )
 
 # extra4-Feld im Footer
 EXTRA4 = 0x0169027d
