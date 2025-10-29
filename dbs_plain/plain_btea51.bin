@@ -1,11 +1,10 @@
 challengeDate: 20251029
 gameMode: "normal"
-gems: 424243
-gemsTotal: 424243
+gems: 51
+gemsTotal: 51
 highestLevel: 1
 lastCharacter: "jacklyn"
 permsVersion: 3
-replayCode: "RALHWD"
 statsDay: 20251029
 statsVersion: 1
 version: 1
@@ -26,31 +25,74 @@ challenges: {
 }
 collectables: {
     bee: 301989897
-    bomb: 67108889
-    bow: 16777252
-    fireball: 16777219
-    gem: 33554462
-    gnome: 301989893
+    bomb: 67108872
+    bow: 16777240
+    fireball: 16777218
+    gem: 33554458
+    gnome: 301989891
     goldbag: 67108870
-    heart: 33554443
-    jacklyn: 402653207
+    heart: 33554439
+    jacklyn: 402653193
     lever: 67108866
-    mcdoodle: 301989896
-    mcdoodle1: 301989911
-    punch: 16777235
+    mcdoodle: 301989894
+    mcdoodle1: 301989897
+    punch: 16777224
     questgiver4: 301989889
-    skeleton: 301989899
-    spider: 301989954
-    spikes: 67108887
-    stat_extra_gems: 134217729
-    stat_extra_stat: 134217729
-    stat_more_level_gold: 134217729
-    statcrit1: 134217729
-    statemergencybubble: 134217729
-    sword1: 16777222
+    skeleton: 301989894
+    spider: 301989921
+    spikes: 67108886
+    sword1: 16777221
 }
 collectables_new: {
-    stat_extra_gems: 1
+}
+dailyStats: {
+    bomb_count: 0
+    bombs: 0
+    bought_destiny_card: 0
+    chainsaw_count: 0
+    coin_well: 0
+    death_by: ""
+    died: 0
+    dist_left: 0
+    dist_ran: 0
+    freeze_count: 0
+    gems: 0
+    gems_from_challenges: 0
+    gold: 0
+    gold_from_bags: 0
+    gold_from_quests: 0
+    hearts: 0
+    level: 0
+    levels_ran: 0
+    levers: 0
+    melee_count: 0
+    punch: 0
+    quests_completed: 0
+    ranged_count: 0
+    reaper_freeze: 0
+    reaper_immolate: 0
+    streak_length: 0
+    time: 0
+    total_damage: 0
+    total_damage_done: 0
+    total_dist_ran: 0
+    total_kills: 0
+    biomes_visited: {
+    }
+    damage_from: {
+    }
+    damage_to: {
+    }
+    damage_type: {
+    }
+    killed_by: {
+    }
+    kills: {
+    }
+    powerups: {
+    }
+    quest_items: {
+    }
 }
 highestLevels: {
     jacklyn: 1
@@ -58,48 +100,6 @@ highestLevels: {
 highscores: {
     version: 2
     bombs_exploded: [
-        {
-            extra2: 1050016
-            extra3: 1761770966
-            level: 1
-            player: "jacklyn"
-            score: 32
-        }
-        {
-            extra2: 2034406
-            extra3: 1761770509
-            level: 1
-            player: "jacklyn"
-            score: 21
-        }
-        {
-            extra2: 6628226
-            extra3: 1761770194
-            level: 1
-            player: "jacklyn"
-            score: 20
-        }
-        {
-            extra2: 14503346
-            extra3: 1761768967
-            level: 1
-            player: "jacklyn"
-            score: 18
-        }
-        {
-            extra2: 2428162
-            extra3: 1761697722
-            level: 1
-            player: "jacklyn"
-            score: 9
-        }
-        {
-            extra2: 8203250
-            extra3: 1761685109
-            level: 1
-            player: "jacklyn"
-            score: 8
-        }
         {
             extra2: 5184454
             extra3: 1761682153
@@ -128,50 +128,22 @@ highscores: {
             player: "jacklyn"
             score: 4
         }
+        {
+            extra2: 15225232
+            extra3: 1761680679
+            level: 1
+            player: "jacklyn"
+            score: 3
+        }
+        {
+            extra2: 590634
+            extra3: 1761651314
+            level: 1
+            player: "jacklyn"
+            score: 1
+        }
     ]
     distance_ran: [
-        {
-            extra2: 1050016
-            extra3: 1761770966
-            level: 1
-            player: "jacklyn"
-            score: 1044
-        }
-        {
-            extra2: 2034406
-            extra3: 1761770509
-            level: 1
-            player: "jacklyn"
-            score: 963
-        }
-        {
-            extra2: 6628226
-            extra3: 1761770194
-            level: 1
-            player: "jacklyn"
-            score: 872
-        }
-        {
-            extra2: 14503346
-            extra3: 1761768967
-            level: 1
-            player: "jacklyn"
-            score: 784
-        }
-        {
-            extra2: 2428162
-            extra3: 1761697722
-            level: 1
-            player: "jacklyn"
-            score: 695
-        }
-        {
-            extra2: 8203250
-            extra3: 1761685109
-            level: 1
-            player: "jacklyn"
-            score: 601
-        }
         {
             extra2: 5184454
             extra3: 1761682153
@@ -200,50 +172,22 @@ highscores: {
             player: "jacklyn"
             score: 256
         }
+        {
+            extra2: 15225232
+            extra3: 1761680679
+            level: 1
+            player: "jacklyn"
+            score: 170
+        }
+        {
+            extra2: 590634
+            extra3: 1761651314
+            level: 1
+            player: "jacklyn"
+            score: 83
+        }
     ]
     enemies_killed: [
-        {
-            extra2: 1050016
-            extra3: 1761770966
-            level: 1
-            player: "jacklyn"
-            score: 91
-        }
-        {
-            extra2: 2034406
-            extra3: 1761770509
-            level: 1
-            player: "jacklyn"
-            score: 85
-        }
-        {
-            extra2: 6628226
-            extra3: 1761770194
-            level: 1
-            player: "jacklyn"
-            score: 77
-        }
-        {
-            extra2: 14503346
-            extra3: 1761768967
-            level: 1
-            player: "jacklyn"
-            score: 69
-        }
-        {
-            extra2: 2428162
-            extra3: 1761697722
-            level: 1
-            player: "jacklyn"
-            score: 61
-        }
-        {
-            extra2: 8203250
-            extra3: 1761685109
-            level: 1
-            player: "jacklyn"
-            score: 56
-        }
         {
             extra2: 5184454
             extra3: 1761682153
@@ -271,6 +215,20 @@ highscores: {
             level: 1
             player: "jacklyn"
             score: 31
+        }
+        {
+            extra2: 15225232
+            extra3: 1761680679
+            level: 1
+            player: "jacklyn"
+            score: 14
+        }
+        {
+            extra2: 590634
+            extra3: 1761651314
+            level: 1
+            player: "jacklyn"
+            score: 7
         }
     ]
     most_gold: [
@@ -310,39 +268,11 @@ highscores: {
             score: 49
         }
         {
-            extra2: 8203250
-            extra3: 1761685109
+            extra2: 5184454
+            extra3: 1761682153
             level: 1
             player: "jacklyn"
-            score: 25
-        }
-        {
-            extra2: 14503346
-            extra3: 1761768967
-            level: 1
-            player: "jacklyn"
-            score: 24
-        }
-        {
-            extra2: 2034406
-            extra3: 1761770509
-            level: 1
-            player: "jacklyn"
-            score: 24
-        }
-        {
-            extra2: 2428162
-            extra3: 1761697722
-            level: 1
-            player: "jacklyn"
-            score: 17
-        }
-        {
-            extra2: 1050016
-            extra3: 1761770966
-            level: 1
-            player: "jacklyn"
-            score: 12
+            score: 10
         }
     ]
 }
@@ -354,7 +284,7 @@ leaderboard_distance_ran: [
         extra4: 0
         level: 0
         player: "Denn"
-        rank: 1524
+        rank: 1562
         score: 1052
         sid: "76561198045968640"
     }
@@ -365,7 +295,7 @@ leaderboard_distance_ran: [
         extra4: 0
         level: 0
         player: "rold2007"
-        rank: 1525
+        rank: 1563
         score: 1049
         sid: "76561197970616026"
     }
@@ -376,7 +306,7 @@ leaderboard_distance_ran: [
         extra4: 0
         level: 0
         player: "johnpassfield"
-        rank: 1526
+        rank: 1564
         score: 1047
         sid: "76561198012134776"
     }
@@ -387,7 +317,7 @@ leaderboard_distance_ran: [
         extra4: 0
         level: 0
         player: "Gryphius"
-        rank: 1527
+        rank: 1565
         score: 1046
         sid: "76561197960912094"
     }
@@ -398,7 +328,7 @@ leaderboard_distance_ran: [
         extra4: 0
         level: 0
         player: "Zeitboy | Z31780Y"
-        rank: 1528
+        rank: 1566
         score: 1044
         sid: "76561198000718824"
     }
@@ -409,7 +339,7 @@ leaderboard_distance_ran: [
         extra4: 0
         level: 0
         player: "Narinn"
-        rank: 1529
+        rank: 1567
         score: 1042
         sid: "76561198045413700"
     }
@@ -420,7 +350,7 @@ leaderboard_distance_ran: [
         extra4: 0
         level: 0
         player: "bgs.tuxBurner"
-        rank: 1530
+        rank: 1568
         score: 1042
         sid: "76561197980414900"
     }
@@ -431,7 +361,7 @@ leaderboard_distance_ran: [
         extra4: 0
         level: 0
         player: "Brummel86"
-        rank: 1531
+        rank: 1569
         score: 1040
         sid: "76561198029788328"
     }
@@ -442,7 +372,7 @@ leaderboard_distance_ran: [
         extra4: 0
         level: 0
         player: "fÃ¼rtierliebe"
-        rank: 1532
+        rank: 1570
         score: 1040
         sid: "76561197976884066"
     }
@@ -453,7 +383,7 @@ leaderboard_distance_ran: [
         extra4: 0
         level: 0
         player: "Coshise"
-        rank: 1533
+        rank: 1571
         score: 1039
         sid: "76561197977719290"
     }
@@ -466,7 +396,7 @@ leaderboard_most_gold: [
         extra4: 0
         level: 3
         player: "DorianGray"
-        rank: 2331
+        rank: 2384
         score: 288
         sid: "76561197971006392"
     }
@@ -477,7 +407,7 @@ leaderboard_most_gold: [
         extra4: 0
         level: 2
         player: "Yannick S"
-        rank: 2332
+        rank: 2385
         score: 287
         sid: "76561198128360954"
     }
@@ -488,7 +418,7 @@ leaderboard_most_gold: [
         extra4: 0
         level: 3
         player: "Deathskipt/Akaspucki"
-        rank: 2333
+        rank: 2386
         score: 287
         sid: "76561198104612139"
     }
@@ -499,7 +429,7 @@ leaderboard_most_gold: [
         extra4: 0
         level: 3
         player: "dettmarp"
-        rank: 2334
+        rank: 2387
         score: 287
         sid: "76561197980014660"
     }
@@ -510,7 +440,7 @@ leaderboard_most_gold: [
         extra4: 0
         level: 1
         player: "Zeitboy | Z31780Y"
-        rank: 2335
+        rank: 2388
         score: 286
         sid: "76561198000718824"
     }
@@ -521,7 +451,7 @@ leaderboard_most_gold: [
         extra4: 0
         level: 2
         player: "RegeM"
-        rank: 2336
+        rank: 2389
         score: 286
         sid: "76561197979149911"
     }
@@ -532,7 +462,7 @@ leaderboard_most_gold: [
         extra4: 0
         level: 3
         player: "Diego"
-        rank: 2337
+        rank: 2390
         score: 285
         sid: "76561198096109983"
     }
@@ -543,7 +473,7 @@ leaderboard_most_gold: [
         extra4: 0
         level: 3
         player: "quarky"
-        rank: 2338
+        rank: 2391
         score: 285
         sid: "76561198057510349"
     }
@@ -554,7 +484,7 @@ leaderboard_most_gold: [
         extra4: 0
         level: 5
         player: "Carfesch"
-        rank: 2339
+        rank: 2392
         score: 285
         sid: "76561198019036460"
     }
@@ -565,64 +495,63 @@ leaderboard_most_gold: [
         extra4: 0
         level: 2
         player: "Test Subject"
-        rank: 2340
+        rank: 2393
         score: 284
         sid: "76561198013415383"
     }
 ]
 mcdoodle: {
     jacklyn: {
-        1: 1761770966
+        1: 1761682153
     }
 }
 perms: [
 ]
 totalStats: {
     bomb_count: 0
-    bombs: 32
+    bombs: 7
     bought_destiny_card: 0
     chainsaw_count: 0
     coin_well: 0
     died: 0
     dist_left: 0
-    dist_ran: 1044
+    dist_ran: 520
     freeze_count: 0
-    gems: 30
+    gems: 26
     gems_from_challenges: 0
-    gold: 759
+    gold: 651
     gold_from_bags: 0
     gold_from_quests: 0
-    hearts: 11
-    levels_ran: 12
+    hearts: 7
+    levels_ran: 6
     levers: 2
     max_level: 1
-    melee_count: 4
-    punch: 6
+    melee_count: 1
+    punch: 0
     quests_completed: 0
-    ranged_count: 87
+    ranged_count: 50
     reaper_freeze: 0
     reaper_immolate: 0
     streak_length: 7
-    time: 534.9
-    total_damage: 7
-    total_damage_done: 105.5
-    total_dist_ran: 1044
-    total_kills: 91
+    time: 329.208
+    total_damage: 2.75
+    total_damage_done: 61.5
+    total_dist_ran: 520
+    total_kills: 51
     biomes_visited: {
-        grass: 12
+        grass: 6
     }
     damage_from: {
         bee: 1
         bomb: 0.25
         lob: 0.25
-        spider: 4.5
-        spikes: 1
+        spider: 1.25
     }
     damage_to: {
         bee: 4.5
-        gnome: 5.5
-        skeleton: 14
-        spider: 81.5
+        gnome: 3.5
+        skeleton: 9
+        spider: 44.5
     }
     damage_type: {
         bomb: 0.5
@@ -631,16 +560,16 @@ totalStats: {
     }
     kills: {
         bee: 9
-        gnome: 5
-        skeleton: 11
-        spider: 66
+        gnome: 3
+        skeleton: 6
+        spider: 33
     }
     powerups: {
-        bow: 34
-        fireball: 3
-        sword1: 6
+        bow: 22
+        fireball: 2
+        sword1: 5
     }
     quest_items: {
     }
 }
-‡cÌ}i
+ö1bï”i
