@@ -2,6 +2,8 @@
 import sys, os, struct, argparse, secrets
 
 # python3 dbs_codec.py decrypt ../dbs_plain/key_btea.bin ../saves/13337gems payload.txt
+# python3 dbs_codec.py encrypt ../dbs_plain/key_btea.bin payload.txt ../saves/13336gems --extra4 0x0169027d
+
 # ---------- XXTEA (BTEA) ----------
 DELTA = 0x9E3779B9
 
@@ -104,12 +106,76 @@ def cmd_decrypt_cipher(args):
 def cmd_encrypt_plain(args):
     key = open(args.key, "rb").read()
     payload = open(args.plain, "rb").read()
-    # optional: keep extra4 from reference block
+
     extra4 = 0
-    if args.ref_block:
+    padlen = args.padlen  # kann None sein
+
+    if args.extra4 is not None:
+        extra4 = parse_u32(args.extra4)
+        print(f"[info] using extra4 from CLI: 0x{extra4:08x}")
+    elif args.ref_block:
+        blk = open(args.ref_block, "rb").read()
+        _payload_ref, _csum_ref, extra4, padlen_ref = unpack_block(blk)
+        print(f"[info] reusing extra4 from ref-block: 0x{extra4:08x}")
+        # padlen nur übernehmen, wenn der Nutzer keinen expliziten padlen gesetzt hat
+        if padlen is None:
+            padlen = padlen_ref
+            print(f"[info] reusing padlen from ref-block: {padlen}")
+    else:
+        print("[warn] no extra4 provided; defaulting to 0 (game may reject)")
+
+    # Optional: Cipher-Länge an Referenz angleichen
+    target_cipher_len = None
+    if args.ref_cipher is not None:
+        target_cipher_len = os.path.getsize(args.ref_cipher)
+        print(f"[info] will try to match cipher size to ref: {target_cipher_len} bytes")
+
+    # 1) Block packen (payload + checksum + extra4 + pad + padlen)
+    block = pack_block(payload, extra4=extra4, padlen=padlen)
+
+    # 2) Falls target_cipher_len gesetzt ist, padlen so anpassen, dass
+    #    len( encrypt(block) ) == target_cipher_len
+    if target_cipher_len is not None:
+        # Brute-force padlen 0..8 durchprobieren (max 9 Varianten)
+        for try_pad in range(0, 9):
+            blk_try = pack_block(payload, extra4=extra4, padlen=try_pad)
+            enc_try = xxtea_encrypt_bytes(blk_try, key)
+            if len(enc_try) == target_cipher_len:
+                block = blk_try
+                padlen = try_pad
+                print(f"[info] matched target size with padlen={padlen}")
+                break
+        else:
+            print("[warn] could not match target cipher size; proceeding anyway")
+
+    # 3) Encrypt
+    enc = xxtea_encrypt_bytes(block, key)
+    open(args.out_cipher, "wb").write(enc)
+    print(f"[ok] wrote encrypted block -> {args.out_cipher}")
+
+
+def parse_u32(s: str) -> int:
+    s = s.strip().lower()
+    if s.startswith("0x"):
+        return int(s, 16) & 0xFFFFFFFF
+    return int(s) & 0xFFFFFFFF
+
+def cmd_encrypt_plain(args):
+    key = open(args.key, "rb").read()
+    payload = open(args.plain, "rb").read()
+
+    # 1) extra4-Quelle priorisieren: --extra4 > --ref-block > default 0
+    extra4 = 0
+    if args.extra4 is not None:
+        extra4 = parse_u32(args.extra4)
+        print(f"[info] using extra4 from CLI: 0x{extra4:08x}")
+    elif args.ref_block:
         blk = open(args.ref_block, "rb").read()
         _, _, extra4, _ = unpack_block(blk)
-        print(f"[info] reusing extra4 from ref: 0x{extra4:08x}")
+        print(f"[info] reusing extra4 from ref-block: 0x{extra4:08x}")
+    else:
+        print("[warn] no extra4 provided; defaulting to 0 (game may reject)")
+
     block = pack_block(payload, extra4=extra4, padlen=args.padlen)
     enc = xxtea_encrypt_bytes(block, key)
     open(args.out_cipher, "wb").write(enc)
@@ -130,6 +196,8 @@ def main():
     e.add_argument("plain")
     e.add_argument("out_cipher")
     e.add_argument("--ref-block", help="optional plain_btea.bin to reuse extra4", default=None)
+    e.add_argument("--ref-cipher", help="optional reference encrypted file to match size", default=None)
+    e.add_argument("--extra4", help="override extra4 (e.g. 0x1234abcd or 305419896)", default=None)
     e.add_argument("--padlen", type=int, default=None)
     e.set_defaults(func=cmd_encrypt_plain)
 

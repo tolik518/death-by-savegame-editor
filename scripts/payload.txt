@@ -1,7 +1,7 @@
 challengeDate: 20251028
 gameMode: "hard"
-gems: 13337
-gemsTotal: 13337
+gems: 13336
+gemsTotal: 13336
 highestLevel: 1
 lastCharacter: "jacklyn"
 permsVersion: 3

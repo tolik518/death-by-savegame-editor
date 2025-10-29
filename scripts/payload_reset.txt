@@ -1,0 +1,305 @@
+challengeDate: 20251029
+gameMode: "normal"
+gems: 0
+lastCharacter: "jacklyn"
+permsVersion: 3
+replayCode: "XICJFH"
+statsDay: 20251029
+version: 1
+achievements: {
+    challenges1: 0
+    challenges10: 0
+    challenges100: 0
+    kill1000: 105
+    kill500: 105
+    level1: -1
+    stump_inspector: 0
+}
+challenges: {
+    freeze50: 0
+    killstreak5: 0
+    quest2: 0
+}
+collectables: {
+    jacklyn: 402653185
+    mcdoodle1: 301989889
+}
+collectables_new: {
+    jacklyn: 1
+    mcdoodle1: 1
+}
+dailyStats: {
+    bomb_count: 0
+    bombs: 0
+    bought_destiny_card: 0
+    chainsaw_count: 0
+    coin_well: 0
+    death_by: ""
+    died: 0
+    dist_left: 0
+    dist_ran: 0
+    freeze_count: 0
+    gems: 0
+    gems_from_challenges: 0
+    gold: 0
+    gold_from_bags: 0
+    gold_from_quests: 0
+    hearts: 0
+    level: 0
+    levels_ran: 0
+    levers: 0
+    melee_count: 0
+    punch: 0
+    quests_completed: 0
+    ranged_count: 0
+    reaper_freeze: 0
+    reaper_immolate: 0
+    streak_length: 0
+    time: 0
+    total_damage: 0
+    total_damage_done: 0
+    total_dist_ran: 0
+    total_kills: 0
+    biomes_visited: {
+    }
+    damage_from: {
+    }
+    damage_to: {
+    }
+    damage_type: {
+    }
+    killed_by: {
+    }
+    kills: {
+    }
+    powerups: {
+    }
+    quest_items: {
+    }
+}
+leaderboard_distance_ran: [
+    {
+        extra1: 138293014
+        extra2: 12928322
+        extra3: 1761689962
+        extra4: 0
+        level: 0
+        player: "Denn"
+        rank: 1552
+        score: 1052
+        sid: "76561198045968640"
+    }
+    {
+        extra1: 888879481
+        extra2: 3281300
+        extra3: 1761658416
+        extra4: 0
+        level: 0
+        player: "rold2007"
+        rank: 1553
+        score: 1049
+        sid: "76561197970616026"
+    }
+    {
+        extra1: 142005379
+        extra2: 15159606
+        extra3: 1761744700
+        extra4: 0
+        level: 0
+        player: "johnpassfield"
+        rank: 1554
+        score: 1047
+        sid: "76561198012134776"
+    }
+    {
+        extra1: 1916051976
+        extra2: 3410212
+        extra3: 1761651477
+        extra4: 0
+        level: 0
+        player: "Gryphius"
+        rank: 1555
+        score: 1046
+        sid: "76561197960912094"
+    }
+    {
+        extra1: 1169177874
+        extra2: 1050016
+        extra3: 1761770966
+        extra4: 0
+        level: 0
+        player: "Zeitboy | Z31780Y"
+        rank: 1556
+        score: 1044
+        sid: "76561198000718824"
+    }
+    {
+        extra1: 422303772
+        extra2: 2625040
+        extra3: 1761686675
+        extra4: 0
+        level: 0
+        player: "Narinn"
+        rank: 1557
+        score: 1042
+        sid: "76561198045413700"
+    }
+    {
+        extra1: 422303772
+        extra2: 13837591
+        extra3: 1761668446
+        extra4: 0
+        level: 0
+        player: "bgs.tuxBurner"
+        rank: 1558
+        score: 1042
+        sid: "76561197980414900"
+    }
+    {
+        extra1: 324570330
+        extra2: 7940746
+        extra3: 1761769640
+        extra4: 0
+        level: 0
+        player: "Brummel86"
+        rank: 1559
+        score: 1040
+        sid: "76561198029788328"
+    }
+    {
+        extra1: 324570330
+        extra2: 10697038
+        extra3: 1761674020
+        extra4: 0
+        level: 0
+        player: "fürtierliebe"
+        rank: 1560
+        score: 1040
+        sid: "76561197976884066"
+    }
+    {
+        extra1: 1449476267
+        extra2: 4068812
+        extra3: 1761706085
+        extra4: 0
+        level: 0
+        player: "Coshise"
+        rank: 1561
+        score: 1039
+        sid: "76561197977719290"
+    }
+]
+leaderboard_most_gold: [
+    {
+        extra1: 544562257
+        extra2: 5508804
+        extra3: 1761648483
+        extra4: 0
+        level: 3
+        player: "DorianGray"
+        rank: 2371
+        score: 288
+        sid: "76561197971006392"
+    }
+    {
+        extra1: 202311845
+        extra2: 2165658
+        extra3: 1761678207
+        extra4: 0
+        level: 2
+        player: "Yannick S"
+        rank: 2372
+        score: 287
+        sid: "76561198128360954"
+    }
+    {
+        extra1: 1976358442
+        extra2: 4790698
+        extra3: 1761670275
+        extra4: 0
+        level: 3
+        player: "Deathskipt/Akaspucki"
+        rank: 2373
+        score: 287
+        sid: "76561198104612139"
+    }
+    {
+        extra1: 1976358442
+        extra2: 3215674
+        extra3: 1761698587
+        extra4: 0
+        level: 3
+        player: "dettmarp"
+        rank: 2374
+        score: 287
+        sid: "76561197980014660"
+    }
+    {
+        extra1: 949185947
+        extra2: 4528194
+        extra3: 1761681235
+        extra4: 0
+        level: 1
+        player: "Zeitboy | Z31780Y"
+        rank: 2375
+        score: 286
+        sid: "76561198000718824"
+    }
+    {
+        extra1: 1571734752
+        extra2: 16537752
+        extra3: 1761668043
+        extra4: 0
+        level: 2
+        player: "RegeM"
+        rank: 2376
+        score: 286
+        sid: "76561197979149911"
+    }
+    {
+        extra1: 1571734752
+        extra2: 525008
+        extra3: 1761702991
+        extra4: 0
+        level: 3
+        player: "Diego"
+        rank: 2377
+        score: 285
+        sid: "76561198096109983"
+    }
+    {
+        extra1: 1571734752
+        extra2: 7350112
+        extra3: 1761690696
+        extra4: 0
+        level: 3
+        player: "quarky"
+        rank: 2378
+        score: 285
+        sid: "76561198057510349"
+    }
+    {
+        extra1: 1976358442
+        extra2: 7087608
+        extra3: 1761740299
+        extra4: 0
+        level: 5
+        player: "Carfesch"
+        rank: 2379
+        score: 285
+        sid: "76561198019036460"
+    }
+    {
+        extra1: 824860650
+        extra2: 12665818
+        extra3: 1761659587
+        extra4: 0
+        level: 2
+        player: "Test Subject"
+        rank: 2380
+        score: 284
+        sid: "76561198013415383"
+    }
+]
+perms: [
+]
