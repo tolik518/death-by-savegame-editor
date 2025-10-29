@@ -18,6 +18,8 @@ Linux:
 3. run `python3 dbs_codec.py decrypt "/home/tolik/.local/share/Terrible Toybox/Death by Scrolling/save.bin" payload.hocon`
 4. Change some data in the `payload.hocon` file
 5. run `python3 dbs_codec.py encrypt payload.hocon "/home/tolik/.local/share/Terrible Toybox/Death by Scrolling/save.bin"`
+6. set `globalLeaderboards:` to `0` in the `Prefs.json`, which is in the same folder as the `save.bin`
+
 
 (!) YOU CAN LOSE ALL YOUR PROGRESS IF YOU MAKE A MISTAKE (!)
 (!) YOU CAN GET BANNED FROM THE LEADERBOARD FOR USING MODIFIED SAVE FILES (!)
