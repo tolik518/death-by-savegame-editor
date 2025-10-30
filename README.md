@@ -1,7 +1,12 @@
-# Death by Savegame Editor
-
-Savegame editor for the game "Death by Scrolling". 
-It allows players to fully modify their save files.  
+<p align="center">    
+	<h1 align="center">
+        <img src="/data/logo/logo-long.png" alt="Death by Savegame Editor">    
+    </h1>
+</p>
+<p align="center"> 
+Savegame editor for the game <a href="https://store.steampowered.com/app/3773590/Death_by_Scrolling/">Death by Scrolling</a>. 
+It allows you to fully modify your save file.  
+</p> 
 
 # Status: WIP
 There is already a proof of concept python script that can decrypt and encrypt save files.
