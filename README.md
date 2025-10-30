@@ -1,6 +1,6 @@
 # Death by Savegame Editor
 
-Savegame editor for the game "Death by Daylight". 
+Savegame editor for the game "Death by Scrolling". 
 It allows players to fully modify their save files.  
 
 # Status: WIP
