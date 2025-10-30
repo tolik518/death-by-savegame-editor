@@ -1,0 +1,18 @@
+[package]
+name = "dbs-gui"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+default-run = "dbs-gui"
+
+[[bin]]
+name = "dbs-gui"
+path = "src/main.rs"
+
+[dependencies]
+dbs-core.workspace = true
+eframe.workspace = true
+egui.workspace = true
+rfd.workspace = true
+

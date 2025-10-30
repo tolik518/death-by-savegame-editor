@@ -1,0 +1,16 @@
+[package]
+name = "dbs-cli"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "dbs-cli"
+path = "src/main.rs"
+
+[dependencies]
+dbs-core.workspace = true
+anyhow.workspace = true
+clap.workspace = true
+
