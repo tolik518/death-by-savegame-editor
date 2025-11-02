@@ -1,8 +1,8 @@
+use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
-use anyhow::{Result, Context};
+use dbs_core::{calc_checksum, decrypt, encrypt};
 use std::fs;
 use std::path::PathBuf;
-use dbs_core::{decrypt, encrypt, calc_checksum};
 
 #[derive(Parser)]
 #[command(name = "dbs-cli")]
@@ -66,19 +66,30 @@ fn cmd_decrypt(cipher_path: &PathBuf, out_plain_path: &PathBuf) -> Result<()> {
     // Decrypt
     let unpacked = decrypt(&enc)?;
 
-    println!("[info] padlen={}  extra4=0x{:08x}", unpacked.padlen, unpacked.extra4);
+    println!(
+        "[info] padlen={}  extra4=0x{:08x}",
+        unpacked.padlen, unpacked.extra4
+    );
 
     let calc = calc_checksum(&unpacked.payload);
     println!(
         "[info] checksum stored=0x{:08x}  calc=0x{:08x}  -> {}",
         unpacked.checksum,
         calc,
-        if unpacked.checksum == calc { "OK" } else { "MISMATCH" }
+        if unpacked.checksum == calc {
+            "OK"
+        } else {
+            "MISMATCH"
+        }
     );
 
     // Write decrypted payload
-    fs::write(out_plain_path, &unpacked.payload)
-        .with_context(|| format!("Failed to write plaintext file: {}", out_plain_path.display()))?;
+    fs::write(out_plain_path, &unpacked.payload).with_context(|| {
+        format!(
+            "Failed to write plaintext file: {}",
+            out_plain_path.display()
+        )
+    })?;
 
     println!("[ok] wrote payload -> {}", out_plain_path.display());
 
@@ -97,8 +108,10 @@ fn cmd_encrypt(plain_path: &PathBuf, out_cipher_path: &PathBuf) -> Result<()> {
     fs::write(out_cipher_path, &enc)
         .with_context(|| format!("Failed to write cipher file: {}", out_cipher_path.display()))?;
 
-    println!("[ok] wrote encrypted block -> {}", out_cipher_path.display());
+    println!(
+        "[ok] wrote encrypted block -> {}",
+        out_cipher_path.display()
+    );
 
     Ok(())
 }
-

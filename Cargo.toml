@@ -7,7 +7,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 authors = ["tolik518"]
 repository = "https://github.com/tolik518/death-by-savegame-editor"
@@ -21,6 +21,7 @@ anyhow = "1.0"
 clap = { version = "4.5", features = ["derive"] }
 
 # GUI dependencies
-eframe = { version = "0.33", default-features = true, features = ["default_fonts"] }
+eframe = { version = "0.33", features = ["default", "default_fonts"] }
+egui_extras = { version = "*", features = ["default", "all_loaders", "image"] }
 egui = "0.33"
 rfd = "0.15"

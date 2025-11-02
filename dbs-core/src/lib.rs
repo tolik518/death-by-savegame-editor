@@ -6,16 +6,13 @@
 //! - `crypto`: XXTEA/BTEA encryption and decryption
 //! - `codec`: Save file format encoding/decoding
 
-pub mod crypto;
 pub mod codec;
+pub mod crypto;
 
 // Re-export commonly used items
 pub use codec::{
-    decrypt, encrypt, calc_checksum, pack_block, unpack_block,
-    UnpackedBlock, KEY, EXTRA4,
+    EXTRA4, KEY, UnpackedBlock, calc_checksum, decrypt, encrypt, pack_block, unpack_block,
 };
 pub use crypto::{
-    xxtea_encrypt_bytes, xxtea_decrypt_bytes,
-    xxtea_encrypt_block, xxtea_decrypt_block,
+    xxtea_decrypt_block, xxtea_decrypt_bytes, xxtea_encrypt_block, xxtea_encrypt_bytes,
 };
-

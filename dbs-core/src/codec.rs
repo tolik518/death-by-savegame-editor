@@ -1,11 +1,9 @@
 /// Handles the payload packing/unpacking with checksum, extra4, and padding
-
-use anyhow::{Result, bail, Context};
+use anyhow::{Context, Result, bail};
 
 /// 16-Byte XXTEA/BTEA Key (little endian, from game dump)
 pub const KEY: [u8; 16] = [
-    0x93, 0x9d, 0xab, 0x7a, 0x2a, 0x56, 0xf8, 0xaf,
-    0xb4, 0xdb, 0xa9, 0xb5, 0x22, 0xa3, 0x4b, 0x2b,
+    0x93, 0x9d, 0xab, 0x7a, 0x2a, 0x56, 0xf8, 0xaf, 0xb4, 0xdb, 0xa9, 0xb5, 0x22, 0xa3, 0x4b, 0x2b,
 ];
 
 /// extra4 field in the footer
@@ -115,7 +113,10 @@ pub fn decrypt(cipher: &[u8]) -> Result<UnpackedBlock> {
     use crate::crypto::xxtea_decrypt_bytes;
 
     if cipher.len() % 8 != 0 {
-        eprintln!("[warn] cipher len {} is not a multiple of 8 – engine would reject this.", cipher.len());
+        eprintln!(
+            "[warn] cipher len {} is not a multiple of 8 – engine would reject this.",
+            cipher.len()
+        );
     }
 
     let plain = xxtea_decrypt_bytes(cipher, &KEY);
@@ -123,7 +124,10 @@ pub fn decrypt(cipher: &[u8]) -> Result<UnpackedBlock> {
 
     let calc = calc_checksum(&unpacked.payload);
     if unpacked.checksum != calc {
-        eprintln!("[warn] checksum mismatch: stored=0x{:08x} calc=0x{:08x}", unpacked.checksum, calc);
+        eprintln!(
+            "[warn] checksum mismatch: stored=0x{:08x} calc=0x{:08x}",
+            unpacked.checksum, calc
+        );
     }
 
     Ok(unpacked)
@@ -231,8 +235,7 @@ mod tests {
         let mut failed = Vec::new();
 
         // Read all files in saves directory
-        let entries = std::fs::read_dir(&saves_dir)
-            .expect("Failed to read saves directory");
+        let entries = std::fs::read_dir(&saves_dir).expect("Failed to read saves directory");
 
         for entry in entries {
             let entry = entry.expect("Failed to read directory entry");
@@ -319,4 +322,3 @@ mod tests {
         }
     }
 }
-

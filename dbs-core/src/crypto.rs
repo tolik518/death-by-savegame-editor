@@ -28,7 +28,7 @@ pub fn xxtea_encrypt_block(v: &mut [u32], k: &[u32; 4]) {
             y = v[p + 1];
             let mx = u32_wrap(
                 (u32_wrap(((z >> 5) ^ (y << 2)) as u64 + ((y >> 3) ^ (z << 4)) as u64) as u64)
-                    ^ ((sum ^ y) as u64 + (k[(p & 3) ^ e] ^ z) as u64)
+                    ^ ((sum ^ y) as u64 + (k[(p & 3) ^ e] ^ z) as u64),
             );
             v[p] = v[p].wrapping_add(mx);
             z = v[p];
@@ -37,7 +37,7 @@ pub fn xxtea_encrypt_block(v: &mut [u32], k: &[u32; 4]) {
         y = v[0];
         let mx = u32_wrap(
             (u32_wrap(((z >> 5) ^ (y << 2)) as u64 + ((y >> 3) ^ (z << 4)) as u64) as u64)
-                ^ ((sum ^ y) as u64 + (k[((n - 1) & 3) ^ e] ^ z) as u64)
+                ^ ((sum ^ y) as u64 + (k[((n - 1) & 3) ^ e] ^ z) as u64),
         );
         v[n - 1] = v[n - 1].wrapping_add(mx);
         z = v[n - 1];
@@ -63,7 +63,7 @@ pub fn xxtea_decrypt_block(v: &mut [u32], k: &[u32; 4]) {
             z = v[p - 1];
             let mx = u32_wrap(
                 (u32_wrap(((z >> 5) ^ (y << 2)) as u64 + ((y >> 3) ^ (z << 4)) as u64) as u64)
-                    ^ ((sum ^ y) as u64 + (k[(p & 3) ^ e] ^ z) as u64)
+                    ^ ((sum ^ y) as u64 + (k[(p & 3) ^ e] ^ z) as u64),
             );
             v[p] = v[p].wrapping_sub(mx);
             y = v[p];
@@ -72,7 +72,7 @@ pub fn xxtea_decrypt_block(v: &mut [u32], k: &[u32; 4]) {
         z = v[n - 1];
         let mx = u32_wrap(
             (u32_wrap(((z >> 5) ^ (y << 2)) as u64 + ((y >> 3) ^ (z << 4)) as u64) as u64)
-                ^ ((sum ^ y) as u64 + (k[(0 & 3) ^ e] ^ z) as u64)
+                ^ ((sum ^ y) as u64 + (k[(0 & 3) ^ e] ^ z) as u64),
         );
         v[0] = v[0].wrapping_sub(mx);
         y = v[0];
@@ -178,4 +178,3 @@ mod tests {
         assert_eq!(&decrypted[..data.len()], data);
     }
 }
-

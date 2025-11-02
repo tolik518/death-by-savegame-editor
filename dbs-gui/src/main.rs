@@ -1,20 +1,31 @@
+use dbs_core::{calc_checksum, decrypt, encrypt};
 use eframe::egui;
-use dbs_core::{decrypt, encrypt, calc_checksum};
 
 fn main() -> Result<(), eframe::Error> {
+    let icon = include_bytes!("../../data/images/logo-square.png");
+    let icon_data = eframe::icon_data::from_png_bytes(icon).expect("Icon could not be loaded");
+    let version = env!("CARGO_PKG_VERSION");
+    let app_name = format!("Death by Savegame Editor v{}", version);
+
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
-            .with_inner_size([518.0, 300.0])
+            .with_inner_size([518.0, 330.0])
             .with_max_inner_size([518.0, 800.0])
-            .with_min_inner_size([518.0, 300.0])
-            .with_resizable(true),
+            .with_min_inner_size([518.0, 330.0])
+            .with_resizable(true)
+            .with_icon(icon_data)
+            .with_app_id(app_name.clone())
+            .with_title(app_name.clone()),
         ..Default::default()
     };
 
     eframe::run_native(
-        "Death by Savegame Editor",
+        &app_name,
         options,
         Box::new(|cc| {
+            // Install image loaders to support PNG images
+            egui_extras::install_image_loaders(&cc.egui_ctx);
+
             // Set up custom fonts if needed
             setup_custom_fonts(&cc.egui_ctx);
             Ok(Box::new(SaveEditorApp::default()))
@@ -28,7 +39,6 @@ fn setup_custom_fonts(ctx: &egui::Context) {
     ctx.set_fonts(fonts);
 }
 
-#[derive(Default)]
 struct SaveEditorApp {
     // File paths
     cipher_path: String,
@@ -49,6 +59,28 @@ struct SaveEditorApp {
 
     // UI state
     needs_resize: bool,
+    is_dark_mode: bool,
+}
+
+impl Default for SaveEditorApp {
+    fn default() -> Self {
+        let (cipher_path, plain_path) = Self::get_default_paths();
+        Self {
+            cipher_path,
+            plain_path,
+            operation_mode: OperationMode::default(),
+            status_message: String::new(),
+            error_message: String::new(),
+            checksum_stored: 0,
+            checksum_calc: 0,
+            extra4: 0,
+            padlen: 0,
+            cipher_len: 0,
+            payload_preview: String::new(),
+            needs_resize: false,
+            is_dark_mode: true,
+        }
+    }
 }
 
 #[derive(Default, PartialEq)]
@@ -59,6 +91,54 @@ enum OperationMode {
 }
 
 impl SaveEditorApp {
+    fn get_save_directory() -> Option<std::path::PathBuf> {
+        use std::path::PathBuf;
+
+        let home = std::env::var("HOME")
+            .or_else(|_| std::env::var("USERPROFILE"))
+            .ok()?;
+
+        let mut path = PathBuf::from(home);
+
+        if cfg!(target_os = "linux") {
+            path.push(".local");
+            path.push("share");
+        } else if cfg!(target_os = "windows") {
+            path.push("AppData");
+            path.push("Local");
+        } else if cfg!(target_os = "macos") {
+            path.push("Library");
+            path.push("Application Support");
+        } else {
+            return None;
+        }
+
+        path.push("Terrible Toybox");
+        path.push("Death by Scrolling");
+
+        Some(path)
+    }
+
+    fn get_default_paths() -> (String, String) {
+        let save_dir = match Self::get_save_directory() {
+            Some(dir) => dir,
+            None => return (String::new(), String::new()),
+        };
+
+        let cipher_path = save_dir.join("save.bin");
+
+        // Only use the path if the file exists
+        if cipher_path.exists() {
+            let plain_path = save_dir.join("save.hocon");
+            (
+                cipher_path.to_string_lossy().to_string(),
+                plain_path.to_string_lossy().to_string(),
+            )
+        } else {
+            (String::new(), String::new())
+        }
+    }
+
     fn decrypt_file(&mut self) {
         self.error_message.clear();
         self.status_message.clear();
@@ -73,33 +153,44 @@ impl SaveEditorApp {
                         self.checksum_calc = calc_checksum(&unpacked.payload);
                         self.extra4 = unpacked.extra4;
                         self.padlen = unpacked.padlen;
-
-                        // Create payload preview (first 500 chars)
-                        let preview_bytes = &unpacked.payload[..unpacked.payload.len().min(500)];
-                        self.payload_preview = String::from_utf8_lossy(preview_bytes).to_string();
+                        self.payload_preview =
+                            String::from_utf8_lossy(&unpacked.payload).to_string();
 
                         // Write decrypted payload
                         match std::fs::write(&self.plain_path, &unpacked.payload) {
                             Ok(_) => {
                                 self.status_message = format!(
-                                    "✓ Successfully decrypted to: {}\n\
+                                    "Successfully decrypted to: {}\n\
                                      Checksum: {} ({})\n\
                                      Cipher length: {} bytes\n\
-                                     Payload length: {} bytes",
+                                     Payload length: {} bytes\
+                                     Keys:\n\
+                                        - extra4: 0x{:08x}\n\
+                                        - key: {:?}",
                                     self.plain_path,
-                                    if self.checksum_stored == self.checksum_calc { "OK" } else { "MISMATCH" },
+                                    if self.checksum_stored == self.checksum_calc {
+                                        "OK"
+                                    } else {
+                                        "MISMATCH"
+                                    },
                                     if self.checksum_stored == self.checksum_calc {
                                         format!("0x{:08x}", self.checksum_calc)
                                     } else {
-                                        format!("stored=0x{:08x} calc=0x{:08x}", self.checksum_stored, self.checksum_calc)
+                                        format!(
+                                            "stored=0x{:08x} calc=0x{:08x}",
+                                            self.checksum_stored, self.checksum_calc
+                                        )
                                     },
                                     self.cipher_len,
-                                    unpacked.payload.len()
+                                    unpacked.payload.len(),
+                                    self.extra4,
+                                    dbs_core::KEY,
                                 );
                                 self.needs_resize = true;
                             }
                             Err(e) => {
-                                self.error_message = format!("Failed to write plaintext file: {}", e);
+                                self.error_message =
+                                    format!("Failed to write plaintext file: {}", e);
                                 self.needs_resize = true;
                             }
                         }
@@ -132,12 +223,21 @@ impl SaveEditorApp {
                         match std::fs::write(&self.cipher_path, &enc) {
                             Ok(_) => {
                                 self.status_message = format!(
-                                    "✓ Successfully encrypted to: {}\n\
+                                    "Successfully encrypted to: {}\n\
+                                     Checksum: {}\n\
                                      Payload length: {} bytes\n\
-                                     Cipher length: {} bytes",
+                                     Cipher length: {} bytes\
+                                      Keys:\n\
+                                        - extra4: 0x{:08x}\n\
+                                        - padlen: {} bytes\n\
+                                        - key: {:?}",
                                     self.cipher_path,
+                                    format!("0x{:08x}", calc_checksum(&payload)),
                                     payload_len,
-                                    cipher_len
+                                    cipher_len,
+                                    dbs_core::EXTRA4,
+                                    (8 - (payload_len % 8)) % 8,
+                                    dbs_core::KEY,
                                 );
                                 self.needs_resize = true;
                             }
@@ -163,11 +263,30 @@ impl SaveEditorApp {
 
 impl eframe::App for SaveEditorApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        let version = env!("CARGO_PKG_VERSION");
+        // Set theme based on toggle
+        if self.is_dark_mode {
+            ctx.set_visuals(egui::Visuals::dark());
+        } else {
+            ctx.set_visuals(egui::Visuals::light());
+        }
 
         egui::CentralPanel::default().show(ctx, |ui| {
-            // add Heading with a version with a small font right after the heading
-            ui.heading(format!("Death by Savegame Editor v{}", version));
+            // Theme toggle in top right corner
+            ui.with_layout(egui::Layout::right_to_left(egui::Align::TOP), |ui| {
+                if ui
+                    .button(if self.is_dark_mode { "🌙" } else { "☀" })
+                    .clicked()
+                {
+                    self.is_dark_mode = !self.is_dark_mode;
+                }
+            });
+
+            // Logo image
+            ui.add(
+                egui::Image::new(egui::include_image!("../../data/images/logo-long-x2.png"))
+                    .fit_to_original_size(1.0)
+                    .max_height(40.0),
+            );
 
             ui.add_space(10.0);
 
@@ -177,8 +296,16 @@ impl eframe::App for SaveEditorApp {
             // Operation mode selection
             ui.horizontal(|ui| {
                 ui.label("Mode:");
-                ui.radio_value(&mut self.operation_mode, OperationMode::Decrypt, "🔓 Decrypt");
-                ui.radio_value(&mut self.operation_mode, OperationMode::Encrypt, "🔒 Encrypt");
+                ui.radio_value(
+                    &mut self.operation_mode,
+                    OperationMode::Decrypt,
+                    "🔓 Decrypt",
+                );
+                ui.radio_value(
+                    &mut self.operation_mode,
+                    OperationMode::Encrypt,
+                    "🔒 Encrypt",
+                );
             });
 
             ui.add_space(15.0);
@@ -297,14 +424,14 @@ impl eframe::App for SaveEditorApp {
             // Payload preview for decrypt mode
             if self.operation_mode == OperationMode::Decrypt && !self.payload_preview.is_empty() {
                 ui.add_space(10.0);
-                ui.collapsing("📄 Payload Preview (first 500 bytes)", |ui| {
+                ui.collapsing("Payload Preview:", |ui| {
                     egui::ScrollArea::vertical()
                         .max_height(200.0)
                         .show(ui, |ui| {
                             ui.add(
                                 egui::TextEdit::multiline(&mut self.payload_preview.as_str())
                                     .code_editor()
-                                    .desired_width(f32::INFINITY)
+                                    .desired_width(f32::INFINITY),
                             );
                         });
                 });
@@ -322,11 +449,7 @@ impl eframe::App for SaveEditorApp {
         // Auto-resize window when content changes
         if self.needs_resize {
             self.needs_resize = false;
-            ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(egui::vec2(
-                518.0,
-                550.0
-            )));
+            ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(egui::vec2(518.0, 550.0)));
         }
     }
 }
-
