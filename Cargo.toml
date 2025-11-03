@@ -25,3 +25,5 @@ eframe = { version = "0.33", features = ["default", "default_fonts"] }
 egui_extras = { version = "*", features = ["default", "all_loaders", "image"] }
 egui = "0.33"
 rfd = "0.15"
+chrono = "0.4"
+indexmap = "2.0"
