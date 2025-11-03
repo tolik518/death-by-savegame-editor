@@ -1,0 +1,9 @@
+[target.x86_64-pc-windows-gnu]
+linker = "x86_64-w64-mingw32-gcc"
+ar = "x86_64-w64-mingw32-ar"
+
+[alias]
+build-all = "build --release --target x86_64-unknown-linux-gnu --target x86_64-pc-windows-gnu"
+build-all-gui = "build --release --target x86_64-unknown-linux-gnu --target x86_64-pc-windows-gnu -p dbs-gui"
+build-all-cli = "build --release --target x86_64-unknown-linux-gnu --target x86_64-pc-windows-gnu -p dbs-cli"
+
