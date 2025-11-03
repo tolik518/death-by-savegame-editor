@@ -7,9 +7,9 @@ members = [
 ]
 
 [workspace.package]
-version = "0.1.1"
+version = "0.2.0"
 edition = "2024"
-authors = ["tolik518"]
+authors = ["Anatolij <tolik518> Vasilev"]
 repository = "https://github.com/tolik518/death-by-savegame-editor"
 license = "MIT"
 
