@@ -7,9 +7,6 @@ pub enum EditorState {
     /// Initial welcome screen with main options
     Welcome,
 
-    /// Loading save file in progress
-    LoadingSave,
-
     /// Active editing session (raw text mode)
     Editing {
         original_path: PathBuf,
@@ -34,10 +31,9 @@ pub enum EditorState {
     /// Confirming restore operation
     ConfirmRestore { backup_info: BackupInfo },
 
-    /// Error state with optional retry
+    /// Error state
     Error {
         message: String,
-        previous_state: Box<EditorState>,
     },
 }
 
@@ -51,28 +47,4 @@ impl Default for EditorState {
     fn default() -> Self {
         Self::Welcome
     }
-}
-
-pub enum EditorAction {
-    // Welcome screen actions
-    LoadSavegame,
-    RecoverBackup,
-
-    // File selection
-    FileSelected(PathBuf),
-    FileCancelled,
-
-    // Editing actions
-    EditContent(String),
-    SaveChanges,
-    CancelEdit,
-
-    // Backup actions
-    SelectBackup(BackupInfo),
-    ConfirmRestore,
-    CancelRestore,
-
-    // Error handling
-    DismissError,
-    RetryLastAction,
 }

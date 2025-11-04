@@ -1,0 +1,1052 @@
+challengeDate: 20251103
+gameMode: "normal"
+gems: 4379
+gemsTotal: 85
+gold: 0
+highestLevel: 6
+lastCharacter: "skylar"
+permsVersion: 3
+personalBestGold: 1408
+replayCode: "KDLCTJ"
+statsDay: 20251103
+statsVersion: 1
+version: 1
+welcomeGems: 25
+achievements: {
+    challenges1: -1
+    challenges10: 1
+    challenges100: 1
+    kill1000: 253
+    kill500: 253
+    level1: -1
+    level3: -1
+    level5: -1
+    stump_inspector: 1
+}
+challenges: {
+    chainsaw25: 0
+    killzombies10: 0
+    level4jacklyn: 0
+}
+collectables: {
+    armor1: 16777218
+    armor2: 16777217
+    armor_bubble: 16777219
+    bag: 33554433
+    bandit: 301989899
+    bandit_ranged: 301989895
+    bomb: 67108866
+    bomber: 16777217
+    bow: 16777234
+    bucket: 402653186
+    cameraspeed: 16777219
+    cleave: 16777217
+    clown: 301989898
+    cold_lobber: 301989890
+    crossbow: 16777222
+    damage2x: 16777221
+    damage3x: 16777220
+    dealer: 301989895
+    deathorb: 16777220
+    earthstomp: 16777217
+    evilcactus: 301989895
+    extraprojectile: 16777222
+    fasterprojectiles: 16777217
+    ferryman: 301989889
+    fireball: 16777224
+    firebow: 16777218
+    freezebow: 16777218
+    full_energy: 16777217
+    gem: 33554486
+    gem_magnet: 16777225
+    gnome: 301989898
+    goldbag: 67108876
+    goldmagnet: 16777222
+    grizzlybear: 301989897
+    hatchet: 16777217
+    heart: 33554444
+    heart_potion: 33554433
+    icespider: 301989890
+    jacklyn: 402653187
+    jumpahead: 16777218
+    killedby_icespider: 335544321
+    killedby_water: 335544321
+    knife: 16777221
+    lever: 67108867
+    lightfooted: 16777219
+    mcdoodle: 301989898
+    mcdoodle1: 301989897
+    megadeath: 16777217
+    morecharges: 16777225
+    orc: 301989889
+    orc_ranged: 301989893
+    pausecamera: 16777226
+    perm_extraheart1: 285212673
+    perm_gem_odds1: 285212674
+    perm_gold_saver: 285212673
+    perm_heart_helper1: 285212673
+    punch: 16777217
+    queenbee: 301989897
+    questgiver3: 301989890
+    questgiver8: 301989890
+    questgiver9: 301989893
+    regen: 16777219
+    shotgun: 16777219
+    skeleton: 301989893
+    skylar: 402653187
+    slowenemies1: 16777218
+    snake: 301989897
+    snake_heavy: 301989890
+    snowling: 301989906
+    snowman: 301989893
+    speedyA: 16777218
+    speedyB: 16777219
+    spider: 301989899
+    spikes: 67108940
+    stat_extra_gems: 134217729
+    stat_more_level_gold: 134217729
+    statarmor1: 134217729
+    statdamage1: 134217729
+    statemergencybubble: 134217729
+    statextraheart1: 134217729
+    statextraprojectiles1: 134217730
+    statextraprojectiles2: 134217729
+    statfasterprojectiles1: 134217729
+    stealth: 16777223
+    stump: 67108865
+    sword1: 16777217
+    teddybear: 33554433
+    throwing_bomb: 16777221
+    torment: 16777218
+    tumbleweed: 301989899
+    waterwalking: 16777222
+    wolf: 301989895
+    yeti: 301989895
+}
+collectables_new: {
+}
+completeChallenges: [
+    20251030
+    "/reaperfreeze5"
+]
+highestLevels: {
+    jacklyn: 4
+    skylar: 6
+}
+highscores: {
+    version: 2
+    bombs_exploded: [
+        {
+            extra2: 8071998
+            extra3: 1761852850
+            level: 6
+            player: "skylar"
+            score: 35
+        }
+        {
+            extra2: 12206436
+            extra3: 1761852935
+            level: 7
+            player: "skylar"
+            score: 35
+        }
+        {
+            extra2: 10434534
+            extra3: 1762210886
+            level: 1
+            player: "skylar"
+            score: 35
+        }
+        {
+            extra2: 11156420
+            extra3: 1761852456
+            level: 4
+            player: "skylar"
+            score: 30
+        }
+        {
+            extra2: 721886
+            extra3: 1761852608
+            level: 5
+            player: "skylar"
+            score: 30
+        }
+        {
+            extra2: 16603378
+            extra3: 1761851687
+            level: 4
+            player: "jacklyn"
+            score: 26
+        }
+        {
+            extra2: 12403314
+            extra3: 1761851848
+            level: 5
+            player: "jacklyn"
+            score: 26
+        }
+        {
+            extra2: 7940746
+            extra3: 1761851968
+            level: 1
+            player: "skylar"
+            score: 26
+        }
+        {
+            extra2: 12403314
+            extra3: 1761852103
+            level: 2
+            player: "skylar"
+            score: 26
+        }
+        {
+            extra2: 4068812
+            extra3: 1761852260
+            level: 3
+            player: "skylar"
+            score: 26
+        }
+    ]
+    distance_ran: [
+        {
+            extra2: 10434534
+            extra3: 1762210886
+            level: 1
+            player: "skylar"
+            score: 1555
+        }
+        {
+            extra2: 12206436
+            extra3: 1761852935
+            level: 7
+            player: "skylar"
+            score: 1461
+        }
+        {
+            extra2: 8071998
+            extra3: 1761852850
+            level: 6
+            player: "skylar"
+            score: 1424
+        }
+        {
+            extra2: 721886
+            extra3: 1761852608
+            level: 5
+            player: "skylar"
+            score: 1239
+        }
+        {
+            extra2: 11156420
+            extra3: 1761852456
+            level: 4
+            player: "skylar"
+            score: 1065
+        }
+        {
+            extra2: 4068812
+            extra3: 1761852260
+            level: 3
+            player: "skylar"
+            score: 918
+        }
+        {
+            extra2: 12403314
+            extra3: 1761852103
+            level: 2
+            player: "skylar"
+            score: 766
+        }
+        {
+            extra2: 7940746
+            extra3: 1761851968
+            level: 1
+            player: "skylar"
+            score: 645
+        }
+        {
+            extra2: 12403314
+            extra3: 1761851848
+            level: 5
+            player: "jacklyn"
+            score: 564
+        }
+        {
+            extra2: 16603378
+            extra3: 1761851687
+            level: 4
+            player: "jacklyn"
+            score: 496
+        }
+    ]
+    enemies_killed: [
+        {
+            extra2: 10434534
+            extra3: 1762210886
+            level: 1
+            player: "skylar"
+            score: 148
+        }
+        {
+            extra2: 12206436
+            extra3: 1761852935
+            level: 7
+            player: "skylar"
+            score: 139
+        }
+        {
+            extra2: 8071998
+            extra3: 1761852850
+            level: 6
+            player: "skylar"
+            score: 136
+        }
+        {
+            extra2: 721886
+            extra3: 1761852608
+            level: 5
+            player: "skylar"
+            score: 133
+        }
+        {
+            extra2: 11156420
+            extra3: 1761852456
+            level: 4
+            player: "skylar"
+            score: 116
+        }
+        {
+            extra2: 4068812
+            extra3: 1761852260
+            level: 3
+            player: "skylar"
+            score: 96
+        }
+        {
+            extra2: 12403314
+            extra3: 1761852103
+            level: 2
+            player: "skylar"
+            score: 74
+        }
+        {
+            extra2: 7940746
+            extra3: 1761851968
+            level: 1
+            player: "skylar"
+            score: 72
+        }
+        {
+            extra2: 12403314
+            extra3: 1761851848
+            level: 5
+            player: "jacklyn"
+            score: 67
+        }
+        {
+            extra2: 16603378
+            extra3: 1761851687
+            level: 4
+            player: "jacklyn"
+            score: 56
+        }
+    ]
+    most_gold: [
+        {
+            extra2: 12403314
+            extra3: 1761851848
+            level: 5
+            player: "jacklyn"
+            score: 1408
+        }
+        {
+            extra2: 16603378
+            extra3: 1761851687
+            level: 4
+            player: "jacklyn"
+            score: 1310
+        }
+        {
+            extra2: 10303282
+            extra3: 1761851495
+            level: 3
+            player: "jacklyn"
+            score: 1078
+        }
+        {
+            extra2: 721886
+            extra3: 1761852608
+            level: 5
+            player: "skylar"
+            score: 910
+        }
+        {
+            extra2: 11156420
+            extra3: 1761852456
+            level: 4
+            player: "skylar"
+            score: 580
+        }
+        {
+            extra2: 4068812
+            extra3: 1761852260
+            level: 3
+            player: "skylar"
+            score: 290
+        }
+        {
+            extra2: 6956356
+            extra3: 1761851277
+            level: 2
+            player: "jacklyn"
+            score: 270
+        }
+        {
+            extra2: 12206436
+            extra3: 1761852935
+            level: 7
+            player: "skylar"
+            score: 199
+        }
+        {
+            extra2: 10303282
+            extra3: 1761851086
+            level: 1
+            player: "jacklyn"
+            score: 181
+        }
+        {
+            extra2: 8071998
+            extra3: 1761852850
+            level: 6
+            player: "skylar"
+            score: 149
+        }
+        {
+            extra2: 10434534
+            extra3: 1762210886
+            level: 1
+            player: "skylar"
+            score: 118
+        }
+    ]
+}
+leaderboard_bombs_exploded: [
+    {
+        extra1: 1954878412
+        extra2: 9450144
+        extra3: 1761793935
+        extra4: 0
+        level: 0
+        player: "Mr Jackalope"
+        rank: 947
+        score: 35
+        sid: 113003756
+    }
+    {
+        extra1: 1954878412
+        extra2: 15542697
+        extra3: 1761700603
+        extra4: 0
+        level: 0
+        player: "Zentail"
+        rank: 948
+        score: 35
+        sid: 65930743
+    }
+    {
+        extra1: 1954878412
+        extra2: 11878306
+        extra3: 1761650096
+        extra4: 0
+        level: 0
+        player: "Pommes Män"
+        rank: 949
+        score: 35
+        sid: 59610328
+    }
+    {
+        extra1: 1954878412
+        extra2: 6099033
+        extra3: 1761766114
+        extra4: 0
+        level: 0
+        player: "Captain Fabulous"
+        rank: 950
+        score: 35
+        sid: 53991734
+    }
+    {
+        extra1: 1954878412
+        extra2: 8071998
+        extra3: 1761852850
+        extra4: 0
+        level: 0
+        player: "Zeitboy | Z31780Y"
+        rank: 951
+        score: 35
+        sid: 40453096
+    }
+    {
+        extra1: 1954878412
+        extra2: 15159606
+        extra3: 1761722721
+        extra4: 0
+        level: 0
+        player: "Ursio Majoris"
+        rank: 952
+        score: 35
+        sid: 38560932
+    }
+    {
+        extra1: 1954878412
+        extra2: 15815866
+        extra3: 1761757467
+        extra4: 0
+        level: 0
+        player: "Iggstave"
+        rank: 953
+        score: 35
+        sid: 35200839
+    }
+    {
+        extra1: 1954878412
+        extra2: 10959542
+        extra3: 1761688443
+        extra4: 0
+        level: 0
+        player: "burking"
+        rank: 954
+        score: 35
+        sid: 35118282
+    }
+    {
+        extra1: 1954878412
+        extra2: 8793884
+        extra3: 1761659879
+        extra4: 0
+        level: 0
+        player: "linojenkins"
+        rank: 955
+        score: 35
+        sid: 30825925
+    }
+    {
+        extra1: 1954878412
+        extra2: 13256452
+        extra3: 1761759114
+        extra4: 0
+        level: 0
+        player: "yol250"
+        rank: 956
+        score: 35
+        sid: 30769368
+    }
+]
+leaderboard_distance_ran: [
+    {
+        extra1: 2102329292
+        extra2: 11156420
+        extra3: 1761682668
+        extra4: 0
+        level: 0
+        player: "Zodiaca"
+        rank: 1788
+        score: 1058
+        sid: 78991565
+    }
+    {
+        extra1: 1355455190
+        extra2: 6365722
+        extra3: 1761683505
+        extra4: 0
+        level: 0
+        player: "HeartEmojiPuns"
+        rank: 1789
+        score: 1056
+        sid: 59513285
+    }
+    {
+        extra1: 138293014
+        extra2: 12928322
+        extra3: 1761689962
+        extra4: 0
+        level: 0
+        player: "Denn"
+        rank: 1790
+        score: 1052
+        sid: 85702912
+    }
+    {
+        extra1: 1916051976
+        extra2: 3410212
+        extra3: 1761651477
+        extra4: 0
+        level: 0
+        player: "Gryphius"
+        rank: 1791
+        score: 1046
+        sid: 646366
+    }
+    {
+        extra1: 1169177874
+        extra2: 1050016
+        extra3: 1761770966
+        extra4: 0
+        level: 0
+        player: "Zeitboy | Z31780Y"
+        rank: 1792
+        score: 1044
+        sid: 40453096
+    }
+    {
+        extra1: 1169177874
+        extra2: 590634
+        extra3: 1761779456
+        extra4: 0
+        level: 0
+        player: "brain_delayed"
+        rank: 1793
+        score: 1044
+        sid: 10522509
+    }
+    {
+        extra1: 422303772
+        extra2: 2625040
+        extra3: 1761686675
+        extra4: 0
+        level: 0
+        player: "Narinn"
+        rank: 1794
+        score: 1042
+        sid: 85147972
+    }
+    {
+        extra1: 422303772
+        extra2: 13837591
+        extra3: 1761668446
+        extra4: 0
+        level: 0
+        player: "bgs.tuxBurner"
+        rank: 1795
+        score: 1042
+        sid: 20149172
+    }
+    {
+        extra1: 324570330
+        extra2: 7940746
+        extra3: 1761769640
+        extra4: 0
+        level: 0
+        player: "Brummel86"
+        rank: 1796
+        score: 1040
+        sid: 69522600
+    }
+    {
+        extra1: 324570330
+        extra2: 10697038
+        extra3: 1761674020
+        extra4: 0
+        level: 0
+        player: "fürtierliebe"
+        rank: 1797
+        score: 1040
+        sid: 16618338
+    }
+]
+leaderboard_enemies_killed: [
+    {
+        extra1: 381529809
+        extra2: 11411094
+        extra3: 1761665084
+        extra4: 0
+        level: 0
+        player: "TargetHero22"
+        rank: 1638
+        score: 91
+        sid: 155868907
+    }
+    {
+        extra1: 381529809
+        extra2: 11418924
+        extra3: 1761747487
+        extra4: 0
+        level: 0
+        player: ">Rich_Lich<"
+        rank: 1639
+        score: 91
+        sid: 147174469
+    }
+    {
+        extra1: 381529809
+        extra2: 3150048
+        extra3: 1761648515
+        extra4: 0
+        level: 0
+        player: "Jack Daw"
+        rank: 1640
+        score: 91
+        sid: 63242879
+    }
+    {
+        extra1: 381529809
+        extra2: 15881492
+        extra3: 1761648472
+        extra4: 0
+        level: 0
+        player: "Markomelon"
+        rank: 1641
+        score: 91
+        sid: 44778126
+    }
+    {
+        extra1: 381529809
+        extra2: 1050016
+        extra3: 1761770966
+        extra4: 0
+        level: 0
+        player: "Zeitboy | Z31780Y"
+        rank: 1642
+        score: 91
+        sid: 40453096
+    }
+    {
+        extra1: 381529809
+        extra2: 1509398
+        extra3: 1761837949
+        extra4: 0
+        level: 0
+        player: "Untoter"
+        rank: 1643
+        score: 91
+        sid: 10981597
+    }
+    {
+        extra1: 381529809
+        extra2: 11345513
+        extra3: 1761808493
+        extra4: 0
+        level: 0
+        player: "GreatUdini"
+        rank: 1644
+        score: 91
+        sid: 8023915
+    }
+    {
+        extra1: 381529809
+        extra2: 6689262
+        extra3: 1761842366
+        extra4: 0
+        level: 0
+        player: "RedKnarf"
+        rank: 1645
+        score: 91
+        sid: 6279871
+    }
+    {
+        extra1: 381529809
+        extra2: 12140810
+        extra3: 1761664515
+        extra4: 0
+        level: 0
+        player: "Buschti"
+        rank: 1646
+        score: 91
+        sid: 6186171
+    }
+    {
+        extra1: 1392516788
+        extra2: 4003186
+        extra3: 1761681742
+        extra4: 0
+        level: 0
+        player: "NitwitJam"
+        rank: 1647
+        score: 90
+        sid: 168449961
+    }
+]
+leaderboard_most_gold: [
+    {
+        extra1: 544562257
+        extra2: 5508804
+        extra3: 1761648483
+        extra4: 0
+        level: 3
+        player: "DorianGray"
+        rank: 2700
+        score: 288
+        sid: 10740664
+    }
+    {
+        extra1: 202311845
+        extra2: 2165658
+        extra3: 1761678207
+        extra4: 0
+        level: 2
+        player: "Yannick S"
+        rank: 2701
+        score: 287
+        sid: 168095226
+    }
+    {
+        extra1: 1976358442
+        extra2: 4790698
+        extra3: 1761670275
+        extra4: 0
+        level: 3
+        player: "Deathskipt/Akaspucki"
+        rank: 2702
+        score: 287
+        sid: 144346411
+    }
+    {
+        extra1: 1976358442
+        extra2: 3215674
+        extra3: 1761698587
+        extra4: 0
+        level: 3
+        player: "dettmarp"
+        rank: 2703
+        score: 287
+        sid: 19748932
+    }
+    {
+        extra1: 949185947
+        extra2: 4528194
+        extra3: 1761681235
+        extra4: 0
+        level: 1
+        player: "Zeitboy | Z31780Y"
+        rank: 2704
+        score: 286
+        sid: 40453096
+    }
+    {
+        extra1: 1571734752
+        extra2: 16537752
+        extra3: 1761668043
+        extra4: 0
+        level: 2
+        player: "RegeM"
+        rank: 2705
+        score: 286
+        sid: 18884183
+    }
+    {
+        extra1: 1571734752
+        extra2: 525008
+        extra3: 1761702991
+        extra4: 0
+        level: 3
+        player: "Diego"
+        rank: 2706
+        score: 285
+        sid: 135844255
+    }
+    {
+        extra1: 1571734752
+        extra2: 7350112
+        extra3: 1761690696
+        extra4: 0
+        level: 3
+        player: "quarky"
+        rank: 2707
+        score: 285
+        sid: 97244621
+    }
+    {
+        extra1: 1976358442
+        extra2: 7087608
+        extra3: 1761740299
+        extra4: 0
+        level: 5
+        player: "Carfesch"
+        rank: 2708
+        score: 285
+        sid: 58770732
+    }
+    {
+        extra1: 1571734752
+        extra2: 15618988
+        extra3: 1761849222
+        extra4: 0
+        level: 3
+        player: "Untgrad"
+        rank: 2709
+        score: 285
+        sid: 9290667
+    }
+]
+mcdoodle: {
+    jacklyn: {
+        1: 1761851086
+        2: 1761851277
+        3: 1761851495
+        4: 1761851687
+    }
+    skylar: {
+        1: 1762210886
+        2: 1761852103
+        3: 1761852260
+        4: 1761852456
+        5: 1761852608
+        6: 1761852850
+    }
+}
+perms: [
+    "perm_extraheart1"
+    "perm_gold_saver"
+]
+totalStats: {
+    bomb_count: 0
+    bombs: 35
+    bought_destiny_card: 0
+    chainsaw_count: 0
+    coin_well: 0
+    died: 2
+    dist_left: 277
+    dist_ran: 1555
+    freeze_count: 22
+    gems: 54
+    gems_from_challenges: 0
+    gold: 1676
+    gold_from_bags: 0
+    gold_from_quests: 0
+    hearts: 13
+    levels_ran: 11
+    levers: 3
+    max_level: 7
+    melee_count: 2
+    punch: 4
+    quests_completed: 1
+    ranged_count: 94
+    reaper_freeze: 11
+    reaper_immolate: 5
+    streak_length: 7
+    time: 1130.61
+    total_damage: 31.5
+    total_damage_done: 403
+    total_dist_ran: 1555
+    total_kills: 148
+    biomes_visited: {
+        desert: 5
+        grass: 5
+        snow: 1
+    }
+    damage_from: {
+        bomb: 1
+        capitalist: 0.75
+        clown: 1.5
+        cyclops: 3
+        gnome: 2.25
+        grizzlybear: 2.5
+        icespider: 5.75
+        lob: 1.25
+        orc_ranged: 3
+        snowling: 1
+        spider_heavy: 2
+        spikes: 2
+        tumbleweed: 1.5
+        venom: 2
+        wolf: 2
+    }
+    damage_to: {
+        bandit: 21.5
+        bandit_ranged: 11
+        capitalist: 12
+        clown: 63
+        cold_lobber: 2
+        cyclops: 12.25
+        evilcactus: 12.5
+        gnome: 19
+        grizzlybear: 18
+        icespider: 11.5
+        orc: 5.5
+        orc_ranged: 18.75
+        queenbee: 20
+        reaper: 20.75
+        skeleton: 12
+        snake: 17.5
+        snowling: 42.5
+        snowman: 10.75
+        spider: 15.5
+        spider_heavy: 1.75
+        tumbleweed: 16
+        wolf: 18
+        yeti: 21.25
+    }
+    damage_type: {
+        bomb: 2.25
+        venom: 2
+    }
+    killed_by: {
+        icespider: 1
+        water: 1
+    }
+    kills: {
+        bandit: 11
+        bandit_ranged: 7
+        clown: 10
+        cold_lobber: 2
+        evilcactus: 7
+        gnome: 10
+        grizzlybear: 9
+        icespider: 2
+        orc: 1
+        orc_ranged: 5
+        queenbee: 9
+        skeleton: 5
+        snake: 9
+        snake_heavy: 2
+        snowling: 18
+        snowman: 5
+        spider: 11
+        tumbleweed: 11
+        wolf: 7
+        yeti: 7
+    }
+    powerups: {
+        armor1: 2
+        armor2: 1
+        armor_bubble: 3
+        bomber: 1
+        bow: 18
+        cameraspeed: 3
+        cleave: 1
+        crossbow: 6
+        damage2x: 5
+        damage3x: 4
+        deathorb: 4
+        earthstomp: 1
+        extraprojectile: 6
+        fasterprojectiles: 1
+        fireball: 8
+        firebow: 2
+        freezebow: 2
+        full_energy: 1
+        gem_magnet: 9
+        goldmagnet: 6
+        hatchet: 1
+        jumpahead: 2
+        lightfooted: 3
+        megadeath: 1
+        morecharges: 9
+        pausecamera: 10
+        regen: 3
+        shotgun: 3
+        slowenemies1: 2
+        speedyA: 2
+        speedyB: 3
+        stealth: 7
+        sword1: 1
+        throwing_bomb: 5
+        torment: 2
+        waterwalking: 6
+    }
+    quest_items: {
+        bag: 1
+        teddybear: 1
+    }
+}

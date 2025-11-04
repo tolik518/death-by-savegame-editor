@@ -2,10 +2,11 @@ mod backup;
 mod editor_state;
 mod hocon_editor;
 mod hocon_parser;
+mod services;
 
 use backup::{BackupInfo, BackupManager};
-use dbs_core::{decrypt, encrypt};
 use editor_state::{EditMode, EditorState};
+use services::{SaveFileService, SaveLocator};
 use eframe::egui;
 use hocon_parser::HoconDocument;
 
@@ -45,6 +46,8 @@ fn main() -> Result<(), eframe::Error> {
 struct SaveEditorApp {
     // Application services
     backup_manager: Option<BackupManager>,
+    save_file_service: SaveFileService,
+    save_locator: SaveLocator,
 
     // UI state
     editor_state: EditorState,
@@ -63,12 +66,15 @@ struct SaveEditorApp {
 
 impl Default for SaveEditorApp {
     fn default() -> Self {
-        let save_dir = Self::get_save_directory();
+        let save_locator = SaveLocator::new();
+        let save_dir = save_locator.get_save_directory();
         let backup_manager = save_dir.map(BackupManager::new);
 
         Self {
             search_query: String::new(),
             backup_manager,
+            save_file_service: SaveFileService::new(),
+            save_locator,
             editor_state: EditorState::Welcome,
             is_dark_mode: true,
             status_message: String::new(),
@@ -79,33 +85,6 @@ impl Default for SaveEditorApp {
 }
 
 impl SaveEditorApp {
-    fn get_save_directory() -> Option<std::path::PathBuf> {
-        use std::path::PathBuf;
-
-        let home = std::env::var("HOME")
-            .or_else(|_| std::env::var("USERPROFILE"))
-            .ok()?;
-
-        let mut path = PathBuf::from(home);
-
-        if cfg!(target_os = "linux") {
-            path.push(".local");
-            path.push("share");
-        } else if cfg!(target_os = "windows") {
-            path.push("AppData");
-            path.push("Local");
-        } else if cfg!(target_os = "macos") {
-            path.push("Library");
-            path.push("Application Support");
-        } else {
-            return None;
-        }
-
-        path.push("Terrible Toybox");
-        path.push("Death by Scrolling");
-
-        Some(path)
-    }
 
     /// Returns ideal window size for a given state
     fn ideal_window_size_for_state(state: &EditorState) -> egui::Vec2 {
@@ -116,7 +95,6 @@ impl SaveEditorApp {
             EditorState::SelectingBackup { .. } => egui::vec2(500.0, 480.0),
             EditorState::ConfirmRestore { .. } => egui::vec2(400.0, 350.0),
             EditorState::Error { .. } => egui::vec2(200.0, 200.0),
-            EditorState::LoadingSave => egui::vec2(400.0, 200.0),
         }
     }
 
@@ -127,15 +105,14 @@ impl SaveEditorApp {
 
     /// Handles loading a savegame
     fn handle_load_savegame(&mut self) {
-        let save_path = match &self.backup_manager {
-            Some(bm) if bm.save_exists() => bm.get_save_path(),
-            _ => {
-                // Show file picker
-                if let Some(path) = self.show_file_picker() {
-                    path
-                } else {
-                    return; // User cancelled
-                }
+        let save_path = if self.save_locator.save_exists() {
+            self.save_locator.get_save_path().unwrap()
+        } else {
+            // Show file picker
+            if let Some(path) = self.show_file_picker() {
+                path
+            } else {
+                return; // User cancelled
             }
         };
 
@@ -179,11 +156,7 @@ impl SaveEditorApp {
     }
 
     fn decrypt_file(&self, path: &std::path::PathBuf) -> anyhow::Result<String> {
-        let cipher = std::fs::read(path)?;
-        let unpacked = decrypt(&cipher)?;
-        let content = String::from_utf8_lossy(&unpacked.payload).to_string();
-
-        Ok(content)
+        self.save_file_service.load(path)
     }
 
     fn handle_save_changes(&mut self) {
@@ -264,10 +237,7 @@ impl SaveEditorApp {
     }
 
     fn encrypt_and_save(&self, content: &str, path: &std::path::PathBuf) -> anyhow::Result<()> {
-        let cipher = encrypt(content.as_bytes())?;
-        std::fs::write(path, cipher)?;
-
-        Ok(())
+        self.save_file_service.save(content, path)
     }
 
     fn handle_recover_backup(&mut self) {
@@ -320,11 +290,7 @@ impl SaveEditorApp {
     }
 
     fn show_error(&mut self, message: String) {
-        let previous_state = Box::new(self.editor_state.clone());
-        self.editor_state = EditorState::Error {
-            message,
-            previous_state,
-        };
+        self.editor_state = EditorState::Error { message };
     }
 
     fn show_file_picker(&self) -> Option<std::path::PathBuf> {
@@ -372,7 +338,6 @@ impl eframe::App for SaveEditorApp {
         // Auto-resize window when state changes
         let current_state_variant = match &self.editor_state {
             EditorState::Welcome => "Welcome",
-            EditorState::LoadingSave => "LoadingSave",
             EditorState::Editing { .. } => "Editing",
             EditorState::EditingParsed { .. } => "EditingParsed",
             EditorState::SelectingBackup { .. } => "SelectingBackup",
@@ -414,14 +379,13 @@ impl eframe::App for SaveEditorApp {
             // Render based on state
             match &self.editor_state.clone() {
                 EditorState::Welcome => self.render_welcome_screen(ui),
-                EditorState::LoadingSave => self.render_loading_screen(ui),
                 EditorState::Editing { .. } => self.render_editing_screen(ui),
                 EditorState::EditingParsed { .. } => self.render_form_editing_screen(ui),
                 EditorState::SelectingBackup { backups } => self.render_backup_list(ui, backups),
                 EditorState::ConfirmRestore { backup_info } => {
                     self.render_restore_confirmation(ui, backup_info)
                 }
-                EditorState::Error { message, .. } => self.render_error_screen(ui, message),
+                EditorState::Error { message } => self.render_error_screen(ui, message),
             }
         });
     }
@@ -755,14 +719,6 @@ impl SaveEditorApp {
         }
     }
 
-    fn render_loading_screen(&mut self, ui: &mut egui::Ui) {
-        ui.vertical_centered(|ui| {
-            ui.add_space(100.0);
-            ui.spinner();
-            ui.add_space(20.0);
-            ui.label("Loading...");
-        });
-    }
 
     fn render_form_editing_screen(&mut self, ui: &mut egui::Ui) {
         let (original_path, backup_path, mut document, is_modified, mut edit_mode) =

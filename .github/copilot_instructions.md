@@ -144,10 +144,18 @@ EditorState::YourState => egui::vec2(width, height),
 ## Testing
 
 ```bash
-cargo test -p dbs-core     # 3 tests (encryption/decryption)
-cargo test -p dbs-gui      # 7 tests (parser + backups)
-cargo test                 # All tests
+cargo test -p dbs-core     # 8 tests (encryption/decryption)
+cargo test -p dbs-gui      # 13 tests (parser + backups + services)
+cargo test                 # All tests (21 total)
 ```
+
+**HOCON Parser Tests:**
+- Basic parsing (simple values, objects, arrays)
+- Real savegame structure validation (based on data/saves/save.hocon)
+- Complex nested objects and arrays
+- Object arrays (highscores, leaderboards)
+- Mixed-type arrays
+- Roundtrip integrity (parse → serialize → parse)
 
 ## Dependencies
 

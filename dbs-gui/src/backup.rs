@@ -165,9 +165,11 @@ mod tests {
         let save_dir = temp_dir.path().to_path_buf();
         let bm = BackupManager::new(save_dir.clone());
 
-        // Create some backup files
-        fs::write(save_dir.join("2024-01-01_12-00-00.bak"), b"backup1").unwrap();
-        fs::write(save_dir.join("2024-01-02_12-00-00.bak"), b"backup2").unwrap();
+        // Create backup directory and some backup files
+        let backup_dir = save_dir.join("backup");
+        fs::create_dir_all(&backup_dir).unwrap();
+        fs::write(backup_dir.join("2024-01-01_12-00-00.bak"), b"backup1").unwrap();
+        fs::write(backup_dir.join("2024-01-02_12-00-00.bak"), b"backup2").unwrap();
 
         let backups = bm.list_backups().unwrap();
         assert_eq!(backups.len(), 2);

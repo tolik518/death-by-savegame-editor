@@ -38,9 +38,6 @@ impl HoconDocument {
         self.root.get(key)
     }
 
-    pub fn get_mut(&mut self, key: &str) -> Option<&mut HoconValue> {
-        self.root.get_mut(key)
-    }
 
     pub fn insert(&mut self, key: String, value: HoconValue) {
         self.root.insert(key, value);
@@ -441,5 +438,295 @@ mod tests {
         let doc2 = HoconDocument::parse(&serialized).unwrap();
 
         assert_eq!(doc, doc2);
+    }
+
+    #[test]
+    fn test_parse_real_savegame() {
+        // Real savegame structure from data/saves/save.hocon
+        let hocon = r#"
+challengeDate: 20251103
+gameMode: "normal"
+gems: 4379
+gemsTotal: 85
+gold: 0
+highestLevel: 6
+lastCharacter: "skylar"
+permsVersion: 3
+personalBestGold: 1408
+replayCode: "KDLCTJ"
+statsDay: 20251103
+statsVersion: 1
+version: 1
+welcomeGems: 25
+achievements: {
+    challenges1: -1
+    challenges10: 1
+    challenges100: 1
+    kill1000: 253
+    kill500: 253
+    level1: -1
+    level3: -1
+    level5: -1
+    stump_inspector: 1
+}
+challenges: {
+    chainsaw25: 0
+    killzombies10: 0
+    level4jacklyn: 0
+}
+perms: [
+    "perm_extraheart1"
+    "perm_gold_saver"
+]
+highestLevels: {
+    jacklyn: 4
+    skylar: 6
+}
+totalStats: {
+    bombs: 35
+    died: 2
+    dist_ran: 1555
+    gems: 54
+    gold: 1676
+    max_level: 7
+    biomes_visited: {
+        desert: 5
+        grass: 5
+        snow: 1
+    }
+}
+"#;
+
+        let doc = HoconDocument::parse(hocon).unwrap();
+
+        // Test top-level integer values
+        assert_eq!(doc.get("gems"), Some(&HoconValue::Int(4379)));
+        assert_eq!(doc.get("gemsTotal"), Some(&HoconValue::Int(85)));
+        assert_eq!(doc.get("gold"), Some(&HoconValue::Int(0)));
+        assert_eq!(doc.get("highestLevel"), Some(&HoconValue::Int(6)));
+        assert_eq!(doc.get("version"), Some(&HoconValue::Int(1)));
+
+        // Test string values
+        assert_eq!(
+            doc.get("gameMode"),
+            Some(&HoconValue::String("normal".to_string()))
+        );
+        assert_eq!(
+            doc.get("lastCharacter"),
+            Some(&HoconValue::String("skylar".to_string()))
+        );
+        assert_eq!(
+            doc.get("replayCode"),
+            Some(&HoconValue::String("KDLCTJ".to_string()))
+        );
+
+        // Test nested object (achievements)
+        if let Some(HoconValue::Object(achievements)) = doc.get("achievements") {
+            assert_eq!(achievements.get("challenges1"), Some(&HoconValue::Int(-1)));
+            assert_eq!(achievements.get("challenges10"), Some(&HoconValue::Int(1)));
+            assert_eq!(achievements.get("kill1000"), Some(&HoconValue::Int(253)));
+            assert_eq!(achievements.get("level1"), Some(&HoconValue::Int(-1)));
+            assert_eq!(achievements.get("stump_inspector"), Some(&HoconValue::Int(1)));
+        } else {
+            panic!("Expected achievements object");
+        }
+
+        // Test another nested object (challenges)
+        if let Some(HoconValue::Object(challenges)) = doc.get("challenges") {
+            assert_eq!(challenges.get("chainsaw25"), Some(&HoconValue::Int(0)));
+            assert_eq!(challenges.get("killzombies10"), Some(&HoconValue::Int(0)));
+            assert_eq!(challenges.get("level4jacklyn"), Some(&HoconValue::Int(0)));
+        } else {
+            panic!("Expected challenges object");
+        }
+
+        // Test string array
+        if let Some(HoconValue::Array(perms)) = doc.get("perms") {
+            assert_eq!(perms.len(), 2);
+            assert_eq!(perms[0], HoconValue::String("perm_extraheart1".to_string()));
+            assert_eq!(perms[1], HoconValue::String("perm_gold_saver".to_string()));
+        } else {
+            panic!("Expected perms array");
+        }
+
+        // Test nested object (highestLevels)
+        if let Some(HoconValue::Object(highest_levels)) = doc.get("highestLevels") {
+            assert_eq!(highest_levels.get("jacklyn"), Some(&HoconValue::Int(4)));
+            assert_eq!(highest_levels.get("skylar"), Some(&HoconValue::Int(6)));
+        } else {
+            panic!("Expected highestLevels object");
+        }
+
+        // Test deeply nested object (totalStats with biomes_visited)
+        if let Some(HoconValue::Object(total_stats)) = doc.get("totalStats") {
+            assert_eq!(total_stats.get("bombs"), Some(&HoconValue::Int(35)));
+            assert_eq!(total_stats.get("died"), Some(&HoconValue::Int(2)));
+            assert_eq!(total_stats.get("dist_ran"), Some(&HoconValue::Int(1555)));
+            assert_eq!(total_stats.get("gems"), Some(&HoconValue::Int(54)));
+            assert_eq!(total_stats.get("max_level"), Some(&HoconValue::Int(7)));
+
+            // Test 3-level deep nesting
+            if let Some(HoconValue::Object(biomes)) = total_stats.get("biomes_visited") {
+                assert_eq!(biomes.get("desert"), Some(&HoconValue::Int(5)));
+                assert_eq!(biomes.get("grass"), Some(&HoconValue::Int(5)));
+                assert_eq!(biomes.get("snow"), Some(&HoconValue::Int(1)));
+            } else {
+                panic!("Expected biomes_visited object");
+            }
+        } else {
+            panic!("Expected totalStats object");
+        }
+    }
+
+    #[test]
+    fn test_parse_real_savegame_with_complex_arrays() {
+        // Test object arrays like highscores and leaderboards
+        let hocon = r#"
+highscores: {
+    version: 2
+    bombs_exploded: [
+        {
+            extra2: 8071998
+            extra3: 1761852850
+            level: 6
+            player: "skylar"
+            score: 35
+        }
+        {
+            extra2: 12206436
+            extra3: 1761852935
+            level: 7
+            player: "skylar"
+            score: 35
+        }
+    ]
+    distance_ran: [
+        {
+            extra2: 10434534
+            extra3: 1762210886
+            level: 1
+            player: "skylar"
+            score: 1555
+        }
+    ]
+}
+completeChallenges: [
+    20251030
+    "/reaperfreeze5"
+]
+"#;
+
+        let doc = HoconDocument::parse(hocon).unwrap();
+
+        // Test object with arrays of objects
+        if let Some(HoconValue::Object(highscores)) = doc.get("highscores") {
+            assert_eq!(highscores.get("version"), Some(&HoconValue::Int(2)));
+
+            // Test array of objects (bombs_exploded)
+            if let Some(HoconValue::Array(bombs)) = highscores.get("bombs_exploded") {
+                assert_eq!(bombs.len(), 2);
+
+                // Check first object in array
+                if let HoconValue::Object(first_bomb) = &bombs[0] {
+                    assert_eq!(first_bomb.get("extra2"), Some(&HoconValue::Int(8071998)));
+                    assert_eq!(first_bomb.get("level"), Some(&HoconValue::Int(6)));
+                    assert_eq!(
+                        first_bomb.get("player"),
+                        Some(&HoconValue::String("skylar".to_string()))
+                    );
+                    assert_eq!(first_bomb.get("score"), Some(&HoconValue::Int(35)));
+                } else {
+                    panic!("Expected object in bombs_exploded array");
+                }
+
+                // Check second object
+                if let HoconValue::Object(second_bomb) = &bombs[1] {
+                    assert_eq!(second_bomb.get("level"), Some(&HoconValue::Int(7)));
+                } else {
+                    panic!("Expected second object in bombs_exploded array");
+                }
+            } else {
+                panic!("Expected bombs_exploded array");
+            }
+
+            // Test another array of objects (distance_ran)
+            if let Some(HoconValue::Array(distance)) = highscores.get("distance_ran") {
+                assert_eq!(distance.len(), 1);
+                if let HoconValue::Object(first_dist) = &distance[0] {
+                    assert_eq!(first_dist.get("score"), Some(&HoconValue::Int(1555)));
+                } else {
+                    panic!("Expected object in distance_ran array");
+                }
+            } else {
+                panic!("Expected distance_ran array");
+            }
+        } else {
+            panic!("Expected highscores object");
+        }
+
+        // Test mixed array (int and string)
+        if let Some(HoconValue::Array(challenges)) = doc.get("completeChallenges") {
+            assert_eq!(challenges.len(), 2);
+            assert_eq!(challenges[0], HoconValue::Int(20251030));
+            assert_eq!(
+                challenges[1],
+                HoconValue::String("/reaperfreeze5".to_string())
+            );
+        } else {
+            panic!("Expected completeChallenges array");
+        }
+    }
+
+    #[test]
+    fn test_real_savegame_roundtrip() {
+        // Test that we can parse and re-serialize a complex real savegame
+        let hocon = r#"
+gems: 4379
+gameMode: "normal"
+achievements: {
+    kill1000: 253
+    level1: -1
+}
+perms: [
+    "perm_extraheart1"
+    "perm_gold_saver"
+]
+highscores: {
+    version: 2
+    bombs_exploded: [
+        {
+            level: 6
+            player: "skylar"
+            score: 35
+        }
+    ]
+}
+"#;
+
+        let doc = HoconDocument::parse(hocon).unwrap();
+        let serialized = doc.to_hocon_string();
+        let doc2 = HoconDocument::parse(&serialized).unwrap();
+
+        // Verify the roundtrip preserved all data
+        assert_eq!(doc2.get("gems"), Some(&HoconValue::Int(4379)));
+        assert_eq!(
+            doc2.get("gameMode"),
+            Some(&HoconValue::String("normal".to_string()))
+        );
+
+        // Verify nested objects
+        if let Some(HoconValue::Object(achievements)) = doc2.get("achievements") {
+            assert_eq!(achievements.get("kill1000"), Some(&HoconValue::Int(253)));
+            assert_eq!(achievements.get("level1"), Some(&HoconValue::Int(-1)));
+        } else {
+            panic!("Expected achievements after roundtrip");
+        }
+
+        // Verify arrays
+        if let Some(HoconValue::Array(perms)) = doc2.get("perms") {
+            assert_eq!(perms.len(), 2);
+        } else {
+            panic!("Expected perms array after roundtrip");
+        }
     }
 }
