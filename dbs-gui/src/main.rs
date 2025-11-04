@@ -56,6 +56,9 @@ struct SaveEditorApp {
 
     // Track state changes for auto-resize
     previous_state_variant: String,
+
+    // Track if we've created a backup in this session
+    backup_created_this_session: bool,
 }
 
 impl Default for SaveEditorApp {
@@ -70,6 +73,7 @@ impl Default for SaveEditorApp {
             is_dark_mode: true,
             status_message: String::new(),
             previous_state_variant: String::new(), // Empty so first frame triggers resize
+            backup_created_this_session: false,
         }
     }
 }
@@ -111,7 +115,7 @@ impl SaveEditorApp {
             EditorState::EditingParsed { .. } => egui::vec2(575.0, 700.0),
             EditorState::SelectingBackup { .. } => egui::vec2(500.0, 480.0),
             EditorState::ConfirmRestore { .. } => egui::vec2(400.0, 350.0),
-            EditorState::Error { .. } => egui::vec2(600.0, 350.0),
+            EditorState::Error { .. } => egui::vec2(200.0, 200.0),
             EditorState::LoadingSave => egui::vec2(400.0, 200.0),
         }
     }
@@ -139,20 +143,6 @@ impl SaveEditorApp {
     }
 
     fn load_and_edit_file(&mut self, save_path: std::path::PathBuf) {
-        // Create backup
-        let backup_path = match &self.backup_manager {
-            Some(bm) => match bm.create_backup(&save_path) {
-                Ok(path) => path,
-                Err(e) => {
-                    self.show_error(format!("Failed to create backup: {}", e));
-                    return;
-                }
-            },
-            None => {
-                self.show_error("Backup manager not initialized".to_string());
-                return;
-            }
-        };
 
         // Read and decrypt
         match self.decrypt_file(&save_path) {
@@ -163,7 +153,7 @@ impl SaveEditorApp {
                         // Successfully parsed - use form editor
                         self.editor_state = EditorState::EditingParsed {
                             original_path: save_path,
-                            backup_path,
+                            backup_path: std::path::PathBuf::new(), // Backup already created
                             document,
                             is_modified: false,
                             edit_mode: EditMode::Form,
@@ -174,7 +164,7 @@ impl SaveEditorApp {
                         eprintln!("Failed to parse HOCON: {}, falling back to raw editor", e);
                         self.editor_state = EditorState::Editing {
                             original_path: save_path,
-                            backup_path,
+                            backup_path: std::path::PathBuf::new(), // Backup already created
                             content: content.clone(),
                             is_modified: false,
                             original_content: content, // Preserve original
@@ -203,10 +193,28 @@ impl SaveEditorApp {
             ..
         } = &self.editor_state
         {
+            // Create backup of the ORIGINAL file before overwriting, but only once per session
+            if !self.backup_created_this_session {
+                if let Some(bm) = &self.backup_manager {
+                    match bm.create_backup(original_path) {
+                        Ok(backup_path) => {
+                            self.backup_created_this_session = true;
+                            self.status_message = format!("Backup created: {}", backup_path.display());
+                        }
+                        Err(e) => {
+                            self.show_error(format!("Failed to create backup: {}", e));
+                            return;
+                        }
+                    }
+                }
+            }
+
             match self.encrypt_and_save(content, original_path) {
                 Ok(_) => {
                     self.status_message = "Save file updated successfully!".to_string();
                     self.editor_state = EditorState::Welcome;
+                    // Reset backup flag when returning to welcome screen
+                    self.backup_created_this_session = false;
                 }
                 Err(e) => {
                     self.show_error(format!("Failed to save: {}", e));
@@ -222,6 +230,22 @@ impl SaveEditorApp {
             ..
         } = &self.editor_state
         {
+            // Create backup of the ORIGINAL file before overwriting, but only once per session
+            if !self.backup_created_this_session {
+                if let Some(bm) = &self.backup_manager {
+                    match bm.create_backup(original_path) {
+                        Ok(backup_path) => {
+                            self.backup_created_this_session = true;
+                            self.status_message = format!("Backup created: {}", backup_path.display());
+                        }
+                        Err(e) => {
+                            self.show_error(format!("Failed to create backup: {}", e));
+                            return;
+                        }
+                    }
+                }
+            }
+
             // Serialize document to HOCON string
             let hocon_string = document.to_hocon_string();
 
@@ -229,6 +253,8 @@ impl SaveEditorApp {
                 Ok(_) => {
                     self.status_message = "Save file updated successfully!".to_string();
                     self.editor_state = EditorState::Welcome;
+                    // Reset backup flag when returning to welcome screen
+                    self.backup_created_this_session = false;
                 }
                 Err(e) => {
                     self.show_error(format!("Failed to save: {}", e));
@@ -609,21 +635,42 @@ impl SaveEditorApp {
             .auto_shrink([false; 2])
             .show(ui, |ui| {
                 for backup in backups {
-                    ui.group(|ui| {
+                    // Choose color based on validity
+                    let (bg_color, text_color) = if backup.is_valid {
+                        (egui::Color32::from_rgb(20, 60, 20), egui::Color32::from_rgb(100, 255, 100))
+                    } else {
+                        (egui::Color32::from_rgb(60, 20, 20), egui::Color32::from_rgb(255, 100, 100))
+                    };
+
+                    let frame = egui::Frame::new()
+                        .fill(bg_color)
+                        .inner_margin(10.0)
+                        .corner_radius(5.0)
+                        .stroke(egui::Stroke::new(1.0, text_color));
+
+                    frame.show(ui, |ui| {
                         ui.horizontal(|ui| {
                             ui.vertical(|ui| {
-                                ui.strong(&backup.filename);
+                                ui.colored_label(text_color, &backup.filename);
                                 ui.label(format!(
                                     "Date: {}",
                                     backup.timestamp.format("%Y-%m-%d %H:%M:%S")
                                 ));
                                 ui.label(format!("Size: {} bytes", backup.size));
+
+                                if !backup.is_valid {
+                                    ui.colored_label(
+                                        egui::Color32::from_rgb(255, 150, 150),
+                                        "⚠ Invalid backup (corrupted or wrong format)"
+                                    );
+                                }
                             });
 
                             ui.with_layout(
                                 egui::Layout::right_to_left(egui::Align::Center),
                                 |ui| {
-                                    if ui.button("Restore").clicked() {
+                                    let button = egui::Button::new("Restore");
+                                    if ui.add_enabled(backup.is_valid, button).clicked() {
                                         self.handle_select_backup(backup.clone());
                                     }
                                 },

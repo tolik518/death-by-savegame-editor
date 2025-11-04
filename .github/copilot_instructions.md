@@ -65,9 +65,13 @@ pub fn decrypt(cipher: &[u8]) -> Result<UnpackedBlock>
 - Toggle between Form ↔ Raw modes (preserves edits)
 
 ### Backup System (backup.rs)
-- Auto-backup before every edit: `YYYY-MM-DD_HH-MM-SS.bak`
-- Emergency backup before restore: `emergency_before_restore.bak`
-- Backup list with restore functionality
+- Backup created when user clicks Save (copies original encrypted save.bin BEFORE overwriting)
+- One backup per session: `backup/YYYY-MM-DD_HH-MM-SS.bak`
+- Backups stored in dedicated `backup/` subfolder within save directory
+- Session resets when returning to Welcome screen
+- Emergency backup before restore: `backup/emergency_before_restore_YYYY-MM-DD_HH-MM-SS.bak` (timestamped to prevent overwriting)
+- Backup validation: Attempts to decrypt each backup to verify integrity
+- Backup list with restore functionality (invalid backups shown in red, cannot be restored)
 
 ### UI Features
 - **Keyboard shortcuts**:
@@ -107,7 +111,7 @@ cargo test
 2. **Dual editor modes**: Form (primary) + Raw (fallback) with bidirectional switching
 3. **Raw mode preserves original**: Shows actual file content with quotes and formatting
 4. **Edit preservation**: Switching Form ↔ Raw preserves all changes
-5. **Auto-backup**: Every edit creates timestamped backup
+5. **Smart backup strategy**: One backup per session, created only when user saves (prevents backup spam)
 6. **Clean architecture**: Domain → Application → Presentation → Infrastructure
 
 ## Common Extension Points

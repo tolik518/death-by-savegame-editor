@@ -1,10 +1,12 @@
 use anyhow::{Context, Result, bail};
 use chrono::{DateTime, Local};
+use dbs_core::decrypt;
 use std::fs;
 use std::path::{Path, PathBuf};
 
 pub struct BackupManager {
     save_dir: PathBuf,
+    backup_dir: PathBuf,
 }
 
 #[derive(Clone, Debug)]
@@ -13,22 +15,24 @@ pub struct BackupInfo {
     pub filename: String,
     pub timestamp: DateTime<Local>,
     pub size: u64,
+    pub is_valid: bool,
 }
 
 impl BackupManager {
     pub fn new(save_dir: PathBuf) -> Self {
-        Self { save_dir }
+        let backup_dir = save_dir.join("backup");
+        Self { save_dir, backup_dir }
     }
 
     /// Lists all .bak files sorted by timestamp (newest first)
     pub fn list_backups(&self) -> Result<Vec<BackupInfo>> {
-        if !self.save_dir.exists() {
+        if !self.backup_dir.exists() {
             return Ok(Vec::new());
         }
 
         let mut backups = Vec::new();
 
-        for entry in fs::read_dir(&self.save_dir).context("Failed to read save directory")? {
+        for entry in fs::read_dir(&self.backup_dir).context("Failed to read backup directory")? {
             let entry = entry?;
             let path = entry.path();
 
@@ -47,11 +51,15 @@ impl BackupManager {
                 .unwrap_or("unknown")
                 .to_string();
 
+            // Validate backup by attempting to decrypt
+            let is_valid = Self::validate_backup(&path);
+
             backups.push(BackupInfo {
                 path,
                 filename,
                 timestamp,
                 size: metadata.len(),
+                is_valid,
             });
         }
 
@@ -61,6 +69,15 @@ impl BackupManager {
         Ok(backups)
     }
 
+    /// Validates a backup file by attempting to decrypt it
+    fn validate_backup(path: &Path) -> bool {
+        if let Ok(cipher) = fs::read(path) {
+            decrypt(&cipher).is_ok()
+        } else {
+            false
+        }
+    }
+
     /// Creates a timestamped backup of the source file
     /// Format: YYYY-MM-DD_HH-MM-SS.bak
     pub fn create_backup(&self, source_path: &Path) -> Result<PathBuf> {
@@ -68,13 +85,13 @@ impl BackupManager {
             bail!("Source file does not exist: {}", source_path.display());
         }
 
-        // Ensure save directory exists
-        fs::create_dir_all(&self.save_dir).context("Failed to create save directory")?;
+        // Ensure backup directory exists
+        fs::create_dir_all(&self.backup_dir).context("Failed to create backup directory")?;
 
         // Generate timestamp filename
         let now = Local::now();
         let filename = format!("{}.bak", now.format("%Y-%m-%d_%H-%M-%S"));
-        let backup_path = self.save_dir.join(filename);
+        let backup_path = self.backup_dir.join(filename);
 
         // Copy file
         fs::copy(source_path, &backup_path).context("Failed to create backup")?;
@@ -92,7 +109,13 @@ impl BackupManager {
 
         // Create a backup of current save.bin before overwriting
         if save_path.exists() {
-            let emergency_backup = self.save_dir.join("emergency_before_restore.bak");
+            // Ensure backup directory exists
+            fs::create_dir_all(&self.backup_dir).context("Failed to create backup directory")?;
+
+            // Create timestamped emergency backup to prevent overwriting
+            let now = Local::now();
+            let emergency_filename = format!("emergency_before_restore_{}.bak", now.format("%Y-%m-%d_%H-%M-%S"));
+            let emergency_backup = self.backup_dir.join(emergency_filename);
             fs::copy(&save_path, &emergency_backup).context("Failed to create emergency backup")?;
         }
 
