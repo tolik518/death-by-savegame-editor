@@ -1,5 +1,6 @@
 <p align="center">    
 	<h1 align="center">
+		Death by Scrolling Savegame Editor <br>
         <img src="/data/images/logo-long-x2.png" alt="Death by Savegame Editor">    
     </h1>
 </p>
